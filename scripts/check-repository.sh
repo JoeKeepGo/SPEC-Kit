@@ -80,7 +80,7 @@ test "$json_backend" != missing || { printf 'JSON parse check unavailable: insta
 
 json_parse() {
   if [ "$json_backend" = jq ]; then jq . "$1" >/dev/null
-  else plutil -lint "$1" >/dev/null
+  else plutil -convert json -o /dev/null -- "$1"
   fi
 }
 json_string() {
