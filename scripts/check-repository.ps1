@@ -4,7 +4,10 @@ $required = @(
     'README.md',
     'docs/SAGE_CORE.md',
     'docs/agent/AGENT_HARNESS.md',
+    'docs/agent/CLAIM_EVIDENCE_TRUST.md',
     'docs/agent/GOVERNANCE_LEVELS.md',
+    'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md',
+    'AGENTS.md',
     'contracts/graph/v1/contract.json',
     'contracts/graph/v1/graph.schema.json',
     'contracts/graph/v1/node-result.schema.json',
@@ -45,10 +48,39 @@ if ($executionSurfaces.Count -gt 0) {
 }
 
 $skill = Get-Content -LiteralPath 'skills/sage-kit/SKILL.md' -Raw
-if (-not $skill.StartsWith("---`n") -and -not $skill.StartsWith("---`r`n")) { throw 'invalid Skill frontmatter' }
-if ($skill -notmatch '(?m)^name: sage-kit\r?$') { throw 'missing Skill name' }
-if ($skill -notmatch '(?m)^description:') { throw 'missing Skill description' }
+$skillFrontmatter = [regex]::Match($skill, '(?s)\A---\r?\n(?<content>.*?)\r?\n---(?:\r?\n|\z)')
+if (-not $skillFrontmatter.Success) { throw 'invalid Skill frontmatter' }
+$skillFrontmatterText = $skillFrontmatter.Groups['content'].Value
+if ($skillFrontmatterText -notmatch '(?m)^name: sage-kit\r?$') { throw 'missing Skill name' }
+$skillDescriptionMatch = [regex]::Match($skillFrontmatterText, '(?m)^description:[ \t]*(?<value>.+?)\r?$')
+if (-not $skillDescriptionMatch.Success) { throw 'missing Skill description' }
+$skillDescription = $skillDescriptionMatch.Groups['value'].Value.Trim()
+foreach ($fragment in @('SAGE-governed', 'adoption', 'planning', 'implementation', 'review', 'release', 'ordinary chat', 'projects that have not adopted SAGE-Kit')) {
+    if ($skillDescription -notlike "*$fragment*") { throw "Skill description missing required scope or exclusion: $fragment" }
+}
+if ($skillFrontmatterText -notmatch '(?m)^disable-model-invocation:[ \t]*false[ \t]*\r?$') { throw 'Skill disable-model-invocation must be false' }
 if ($skill -notmatch 'No CLI, package runtime, daemon, or hidden validator is required') { throw 'missing model-native architecture statement' }
+if (($skill -replace '`', '') -notlike '*SAGE-Kit adoption does not depend on $sage-kit appearing in every prompt.*') { throw 'Skill automatic activation must not require explicit invocation per prompt' }
+
+$agentManifest = Get-Content -LiteralPath 'skills/sage-kit/agents/openai.yaml' -Raw
+$implicitInvocationEntries = @([regex]::Matches($agentManifest, '(?m)^[ \t]*allow_implicit_invocation:[ \t]*(?<value>[^ \t#\r\n]+)[ \t]*(?:#.*)?\r?$'))
+if ($implicitInvocationEntries.Count -ne 1 -or $implicitInvocationEntries[0].Groups['value'].Value -cne 'true') { throw 'SAGE-Kit allow_implicit_invocation must be exactly true' }
+if ($agentManifest -notmatch 'Apply SAGE-Kit automatically') { throw 'SAGE-Kit agent manifest is missing automatic activation guidance' }
+if ($agentManifest -notmatch 'Explicit \$sage-kit invocation is an override or diagnostic') { throw 'SAGE-Kit agent manifest is missing explicit invocation override guidance' }
+
+$kernelConcepts = @('Authority and scope', 'Claim-evidence congruence', 'Observed-fact ownership', 'Affected-only invalidation', 'Genuine blockers')
+$bootstrapRequirements = @('\bSAGE_ACTIVE\b', '\bLight work\b', '\bStandard or Heavy\b', 'Explicit \$sage-kit\s+invocation remains an override or\s+diagnostic', 'fallback\s+only\s+on\s+hosts\s+with\s+neither\s+automatic\s+project\s+instructions\s+nor\s+implicit\s+Skill\s+invocation')
+foreach ($path in @('AGENTS.md', 'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md')) {
+    $bootstrap = Get-Content -LiteralPath $path -Raw
+    $bootstrapRoutingText = $bootstrap -replace '`', ''
+    if (@(Get-Content -LiteralPath $path).Count -gt 80) { throw "SAGE-Kit bootstrap exceeds 80 lines: $path" }
+    foreach ($concept in $kernelConcepts) {
+        if ($bootstrap -notlike "*$concept*") { throw "SAGE-Kit bootstrap missing kernel concept '$concept': $path" }
+    }
+    foreach ($requirement in $bootstrapRequirements) {
+        if ($bootstrapRoutingText -notmatch $requirement) { throw "SAGE-Kit bootstrap missing activation routing guidance: $path" }
+    }
+}
 
 foreach ($path in ($tracked | Where-Object { $_ -like '*.json' })) {
     Get-Content -LiteralPath $path -Raw | ConvertFrom-Json | Out-Null
@@ -83,7 +115,8 @@ foreach ($entry in $graphManifest.resources.PSObject.Properties) {
 }
 
 # Validate only the small explicit canonical-authority pointer manifest, not
-# ordinary Markdown links.
+# ordinary Markdown links. This is the single validation owner for
+# docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001.
 $canonicalPointers = @(Get-Content -LiteralPath 'contracts/canonical-authority-pointers.txt' | Where-Object { $_.Trim() })
 if (($canonicalPointers | Sort-Object -Unique).Count -ne $canonicalPointers.Count) { throw 'duplicate canonical authority pointer' }
 $declaredPointers = @()
