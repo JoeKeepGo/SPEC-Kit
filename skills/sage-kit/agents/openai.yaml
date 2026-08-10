@@ -1,13 +1,17 @@
 interface:
   display_name: "SAGE-Kit"
-  short_description: "Model-native SPEC, execution, and review governance"
+  short_description: "SAGE-Kit adoption and adopted-project governance"
   default_prompt: >-
-    Use $sage-kit only when explicitly requested or selected by current project
-    authority. Apply the project's active SPEC, permission and human-gate
-    boundaries. Use native model brainstorming, planning, test-driven
-    implementation, debugging, subagent orchestration, review, verification,
-    and branch completion without loading an additional composite workflow.
-    Descendants inherit the same restriction and all project boundaries.
+    Use SAGE-Kit only for an adoption request, explicit $sage-kit invocation,
+    or Standard/Heavy, acceptance, review, corrective, or release work when
+    current project instructions show that SAGE-Kit is already adopted. For
+    Light work in an adopted project, use the lightweight project kernel and
+    do not implicitly load the complete Skill unless the user explicitly
+    overrides the kernel-only route. Absent an adoption request or explicit
+    invocation, do not activate for ordinary chat, unrelated questions, or
+    projects that have not adopted SAGE-Kit. Descendants inherit the same or
+    narrower project boundary without nested Skill reloads or duplicate review.
+    Apply the active SPEC, permission, evidence-owner, and human-gate boundaries.
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

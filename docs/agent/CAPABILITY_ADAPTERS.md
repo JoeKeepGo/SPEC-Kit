@@ -6,6 +6,12 @@
 Capabilities include host-native tools, specialist Skills, plugins, MCP tools,
 subagents, browsers, databases, CI, and project automation.
 
+Activation is also host capability routing. Prefer the host's documented
+automatic project-instruction entry, then its documented implicit Skill route.
+Require explicit invocation only when neither exists. Availability metadata,
+project instructions, and model-selected Skill loading are guidance channels;
+none proves hard enforcement, execution, safety, or containment.
+
 Use this lifecycle:
 
 1. detect task-relevant capability metadata;
@@ -21,7 +27,14 @@ Fallback cannot broaden scope, bypass a gate, change authority, or weaken
 verification. External output is evidence input and cannot declare completion
 or acceptance.
 
-Descendants inherit all restrictions. A controller may preauthorize one nested
+Map capability and evidence claims only through
+[`CLAIM_EVIDENCE_TRUST.md`](CLAIM_EVIDENCE_TRUST.md). Do not infer a later
+realization depth from tool availability or successful local output.
+
+Descendants inherit the same SAGE boundary and all restrictions. Pass the
+already-selected profiles and boundary into delegated work; nested delegation
+must not cause repeated SAGE-Kit loading or duplicate review of an unchanged
+boundary. A controller may preauthorize one nested
 delegation envelope that names maximum depth, concurrency, permission ceiling,
 allowed/read-only/forbidden paths, capability bounds, and stop conditions.
 Children may delegate only within the remaining depth and concurrency of that

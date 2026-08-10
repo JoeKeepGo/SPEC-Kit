@@ -6,15 +6,26 @@ The goal is trustworthy convergence with the least repeated work.
 <a id="sage-loop-006"></a>
 ## Verification Admission
 
+Apply the claim/evidence trust rules in
+[`CLAIM_EVIDENCE_TRUST.md`](CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+
 - During implementation, run only project-native focused checks for changed
   behavior.
-- At a lane boundary, verify only affected contracts and integrations.
+- Trace changed implementation, wiring, entry paths, targets, contracts, and
+  acceptance inputs to affected claims. Invalidate only evidence for those
+  claims, then verify only their affected contracts and integrations.
+- Reuse attributable evidence at a later revision when the relevant diff from
+  its bound revision leaves the claim inputs, scope, and target unchanged.
+- Admit final product, package, or E2E proof only when both conditions hold:
+  (1) the claim or acceptance criteria require that proof class; and (2) that
+  class is first being established for the claim, relevant wiring, entry paths,
+  or delivered artifacts changed, an explicit product gate requires it, or
+  release acceptance requires it. A new implementation-only claim does not by
+  itself admit E2E. Run admitted expensive proof once for the final unchanged
+  candidate.
 - Run broad project CI once when required for the final unchanged candidate. A
-  corrective creates a successor candidate that may run CI again.
-- Reuse attributable evidence while its inputs, scope, and relevant code are
-  unchanged.
-- When a corrective changes one boundary, invalidate and re-run only that
-  boundary before the final CI decision.
+  successor receives replacement final proof only when its relevant inputs
+  changed; milestone count alone never adds runs.
 
 No framework-side candidate freeze, repository hashing, package build, process
 lease, verification counter, or checkpoint is required. Git commit identity,
@@ -52,10 +63,13 @@ unapproved scope expansion.
 <a id="sage-loop-012"></a>
 ## Evidence Reuse
 
-Evidence states command or review, scope, relevant revision/diff, result, and
-limitations. It may be referenced rather than copied into every phase document.
-Historical evidence is not current evidence unless its inputs are unchanged and
-the current authority permits reuse.
+Evidence states command or review, scope, the revision where it was produced,
+result, and limitations. It may be referenced rather than copied into every
+phase document. Historical acceptance remains an immutable event, not current
+trust. Reuse does not require the current revision SHA to equal the bound
+revision. Historical evidence is current only after the relevant diff from its
+bound revision is shown not to change its claim inputs, scope, or target, and
+current authority permits reuse.
 
 ## Host Resource Courtesy
 

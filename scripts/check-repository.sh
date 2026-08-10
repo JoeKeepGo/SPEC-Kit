@@ -2,13 +2,15 @@
 set -eu
 
 for path in README.md docs/SAGE_CORE.md docs/agent/AGENT_HARNESS.md \
-  docs/agent/GOVERNANCE_LEVELS.md contracts/graph/v1/contract.json \
+  docs/agent/CLAIM_EVIDENCE_TRUST.md docs/agent/GOVERNANCE_LEVELS.md \
+  docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md AGENTS.md \
+  contracts/graph/v1/contract.json \
   contracts/graph/v1/graph.schema.json contracts/graph/v1/node-result.schema.json \
   contracts/task-dispatch-v2/policy.json \
   contracts/task-dispatch-v2/task.schema.json \
   contracts/task-dispatch-v2/evidence.schema.json \
   contracts/canonical-authority-pointers.txt \
-  skills/sage-kit/SKILL.md; do
+  skills/sage-kit/SKILL.md skills/sage-kit/agents/openai.yaml; do
   test -f "$path" || { printf 'missing required path: %s\n' "$path" >&2; exit 1; }
 done
 
@@ -23,10 +25,38 @@ if [ -n "$execution_surfaces" ]; then
   test -z "$stale" || { printf 'forbidden runtime invocation:\n%s\n' "$stale" >&2; exit 1; }
 fi
 
-head -n 1 skills/sage-kit/SKILL.md | grep -qx -- '---'
-grep -q '^name: sage-kit$' skills/sage-kit/SKILL.md
-grep -q '^description:' skills/sage-kit/SKILL.md
-grep -q 'No CLI, package runtime, daemon, or hidden validator is required' skills/sage-kit/SKILL.md
+skill_path=skills/sage-kit/SKILL.md
+agent_manifest=skills/sage-kit/agents/openai.yaml
+skill_frontmatter=$(awk '
+  NR == 1 { line = $0; sub(/\r$/, "", line); if (line != "---") exit 1; next }
+  { line = $0; sub(/\r$/, "", line); if (line == "---") { found = 1; exit }; print line }
+  END { if (!found) exit 1 }
+' "$skill_path") || { printf 'invalid Skill frontmatter\n' >&2; exit 1; }
+skill_name_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^name:' || true)
+skill_name_count=$(printf '%s\n' "$skill_name_entries" | sed '/^$/d' | wc -l | tr -d ' ')
+test "$skill_name_count" -eq 1 && printf '%s\n' "$skill_name_entries" | grep -Eq '^name:[[:space:]]*sage-kit[[:space:]]*$' || { printf 'Skill name must appear exactly once with value sage-kit\n' >&2; exit 1; }
+skill_description_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^description:' || true)
+skill_description_count=$(printf '%s\n' "$skill_description_entries" | sed '/^$/d' | wc -l | tr -d ' ')
+test "$skill_description_count" -eq 1 && printf '%s\n' "$skill_description_entries" | grep -Eq '^description:[[:space:]]*[^[:space:]]' || { printf 'Skill description must appear exactly once with a value\n' >&2; exit 1; }
+model_invocation_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^disable-model-invocation:' || true)
+model_invocation_count=$(printf '%s\n' "$model_invocation_entries" | sed '/^$/d' | wc -l | tr -d ' ')
+test "$model_invocation_count" -eq 1 && printf '%s\n' "$model_invocation_entries" | grep -Eq '^disable-model-invocation:[[:space:]]*false[[:space:]]*$' || { printf 'Skill disable-model-invocation must appear exactly once with value false\n' >&2; exit 1; }
+
+implicit_invocation_entries=$(tr -d '\r' < "$agent_manifest" | grep -E '^[[:space:]]*allow_implicit_invocation:' || true)
+implicit_invocation_count=$(printf '%s\n' "$implicit_invocation_entries" | sed '/^$/d' | wc -l | tr -d ' ')
+test "$implicit_invocation_count" -eq 1 && printf '%s\n' "$implicit_invocation_entries" | grep -Eq '^[[:space:]]*allow_implicit_invocation:[[:space:]]*true[[:space:]]*(#.*)?$' || { printf 'SAGE-Kit allow_implicit_invocation must appear exactly once with value true\n' >&2; exit 1; }
+
+activation_marker='SAGE_ACTIVE source=<project-entry> governance=<Light|Standard|Heavy> authority=<current-reference> profiles=<selected-or-none>'
+test "$(tr -d '\r' < "$skill_path" | grep -Fxc "$activation_marker")" -eq 1 || { printf 'SAGE-Kit Skill must contain exactly one canonical activation marker\n' >&2; exit 1; }
+
+check_bootstrap() {
+  path=$1
+  line_count=$(wc -l < "$path" | tr -d ' ')
+  test "$line_count" -le 80 || { printf 'SAGE-Kit bootstrap exceeds 80 lines: %s\n' "$path" >&2; exit 1; }
+  test "$(tr -d '\r' < "$path" | grep -Fxc "$activation_marker")" -eq 1 || { printf 'SAGE-Kit bootstrap must contain exactly one canonical activation marker: %s\n' "$path" >&2; exit 1; }
+}
+check_bootstrap AGENTS.md
+check_bootstrap docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md
 
 # JSON readability uses an already available native tool. Stock macOS has
 # plutil; Linux CI supplies jq. Missing parse capability fails closed.
@@ -62,7 +92,8 @@ for schema in task.schema.json evidence.schema.json; do
 done
 
 # Explicit canonical-authority pointer manifest only; ordinary links are not
-# governance contracts.
+# governance contracts. This is the single validation owner for
+# docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001.
 test "$(sort -u contracts/canonical-authority-pointers.txt | wc -l | tr -d ' ')" = "$(wc -l < contracts/canonical-authority-pointers.txt | tr -d ' ')" || { printf 'duplicate canonical authority pointer\n' >&2; exit 1; }
 manifest_pointers=$(sort contracts/canonical-authority-pointers.txt)
 declared_pointers=$(git grep -n -E '^<a id="[^"]+"></a>' -- 'docs/*.md' | sed -E 's|^([^:]+):[0-9]+:<a id="([^"]+)"></a>.*$|\1#\2|' | sort)

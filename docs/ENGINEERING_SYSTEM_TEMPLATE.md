@@ -8,8 +8,13 @@ checks, or acceptance.
 
 - Active SPEC / project authority:
 - Permission and acceptance owners:
-- ACTIVE_CONTEXT (exclusive current objective/status/findings/blockers/next action):
+- ACTIVE_CONTEXT (coordination snapshot and normative intent; copied machine
+  facts carry `observed-at` and source):
 - Project-required checks and approval gates:
+
+`ACTIVE_CONTEXT` does not override direct Git, runtime, test, review, or
+artifact facts. Current-truth ownership and refresh rules are canonical at
+[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
 
 Historical ledgers are immutable event/evidence indexes. Handoffs are bounded
 transfer views. Completion reports reference authority, evidence, and current

@@ -1,5 +1,10 @@
 # Planning
 
+Automatic project instructions may carry Light planning with only the
+lightweight kernel. Load this profile once through the complete Skill for
+Standard or Heavy roadmap, milestone, wave, phase, acceptance, release, or
+capability/evidence planning.
+
 Preserve the path from product idea to executable work:
 
 1. clarify owner intent, users, boundaries, risks, and non-goals;
@@ -18,3 +23,8 @@ Templates in `docs/templates/` are composable. Do not fill every template by
 default, copy framework rules into project documents, or turn physical document
 layout into execution identity. Planning findings may refine the current
 planning boundary but cannot silently start implementation.
+
+Use [`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md)
+for capability and evidence decisions instead of reproducing its model. Plans
+and planning descendants inherit the same or narrower SAGE boundary; they do
+not recursively reload the Skill or schedule duplicate review.

@@ -1,8 +1,18 @@
 # Review And Completion
 
+Acceptance, review, corrective, and release work load the complete Skill and
+this profile once for the active task, even when the originating work used only
+the Light project kernel. Handoff and closeout load it when governance is
+Standard or Heavy or current project authority selects the full profile.
+
 Review the active diff against current authority, acceptance criteria, affected
 contracts, tests, security boundaries, and evidence. Return one bounded finding
 set.
+
+Evaluate capability and evidence claims through
+[`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md). Review
+only the affected boundary, and do not let descendants or nested workflows
+repeat the same review of an unchanged candidate.
 
 - P0/P1 block.
 - P2 blocks only for authority conflict, false-green, approval gate, safety

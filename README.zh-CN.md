@@ -31,12 +31,18 @@ Light 工作不强制使用 Graph。
 
 ## 快速接入
 
+Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常方式工作：
+
 1. 通过宿主的 Skill 机制引用或安装 [`skills/sage-kit`](skills/sage-kit)。
-2. 使用项目自有的紧凑 `ACTIVE_CONTEXT` 保存当前事实和 handoff。
-3. 向模型提供 active SPEC、允许路径、验收条件和审批边界。
-4. 根据真实风险选择 Light、Standard 或 Heavy。
-5. 实现期间只运行项目 focused checks；项目、merge 或 release gate 要求时，每个未变
-   最终候选运行一次项目 CI。
+2. 使用 [`AGENTS.md` bootstrap 模板](docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
+   添加轻量项目入口，并指向当前项目 authority。Claude Code 项目使用导入该
+   bootstrap 的 `CLAUDE.md`；具体见宿主 reference。
+3. Light 工作由自动项目指令携带 kernel；Standard/Heavy 以及 acceptance、review、
+   corrective、release 工作隐式加载一次完整 Skill。
+4. 显式 `$sage-kit` 用于覆盖或诊断路由；只有宿主同时缺少自动项目指令和隐式 Skill
+   调用时，它才是必需 fallback。
+5. 实现期间使用项目原生 focused checks；只有项目、merge、release 或 acceptance
+   gate 要求时才运行最终 CI。
 
 建议从 [`SAGE_CORE.md`](docs/SAGE_CORE.md)、
 [`AGENT_HARNESS.md`](docs/agent/AGENT_HARNESS.md) 和
@@ -56,8 +62,12 @@ Light 工作不强制使用 Graph。
 ## 权威边界
 
 - 项目拥有产品需求、threat model、范围、权限、gates、tests 与 acceptance。
-- `ACTIVE_CONTEXT` 保存当前 handoff 真值；历史文档只有被当前 authority 明确选择时
-  才能作为执行依据。
+- Git、runtime、checks、reviews 与 artifacts 拥有各自直接观测的事实；项目文档拥有
+  intent 与 decisions。`ACTIVE_CONTEXT` 是紧凑 handoff snapshot，不是第二个机器事实
+  来源。
+- capability realization 与 evidence trust 统一由
+  [`CLAIM_EVIDENCE_TRUST.md`](docs/agent/CLAIM_EVIDENCE_TRUST.md) 管理；其他表面只链接，
+  不复制模型全文。
 - [`contracts`](contracts) 提供可选、静态、语言无关的 Graph 与 Node Result
   schema。合同存在不会执行任务或授予权限。
 - [`docs`](docs) 保存治理模型与规划模板。
@@ -65,9 +75,11 @@ Light 工作不强制使用 Graph。
 
 ## 支持的宿主
 
-Skill 包含 Codex、Claude Code、OpenCode 和 Kimi 指导，并可与 specialist Skills、
-plugins、MCP、原生 subagents 及项目自动化共存。所有能力仍受项目 authority 约束，
-不得静默扩张范围。
+Skill 包含 Codex、Claude Code、OpenCode 和 Kimi 指导。Codex、Kimi Code CLI 与
+OpenCode 支持项目 `AGENTS.md`；Claude Code 使用 `CLAUDE.md`，并可导入该 bootstrap。
+这些项目指令和隐式 Skill 路由用于指导模型，不构成 hard enforcement。SAGE-Kit 可与
+specialist Skills、plugins、MCP、原生 subagents 及项目自动化共存；所有能力仍受项目
+authority 约束，不得静默扩张范围。
 
 跨 Milestone 继续执行依赖宿主，且只限已纳入并预授权的 milestone。协调 envelope
 记录 authority、admission、完成/下一 admission、drift、resume、handoff 与 convergence。
@@ -99,8 +111,7 @@ scripts/            轻量仓库完整性检查
 tests/              已发布宿主 hooks 的 Shell/PowerShell 测试
 ```
 
-首个模型原生 Release 仅使用 GitHub source archive；不发布 bundle、checksum artifact
-或可执行 SAGE-Kit runtime。参见 [`RELEASE.md`](docs/RELEASE.md) 与
+从旧可执行版本线迁移时，参见
 [`模型原生迁移指南`](docs/MIGRATION_MODEL_NATIVE.md)。
 
 ## 适用场景

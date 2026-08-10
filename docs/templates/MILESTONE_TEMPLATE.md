@@ -4,11 +4,20 @@ Use this optional detailed profile when a milestone is an independently
 acceptable product outcome and Standard/Heavy planning benefits from a retained
 artifact. One outcome may include cohesive UI, API, data, and runtime support.
 Review is normally a gate/node, and becomes its own milestone only for an
-independent release, authority, or cross-milestone acceptance boundary.
+independent release, authority, or cross-milestone acceptance boundary. Use
+[`CLAIM_EVIDENCE_TRUST.md`](../agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001)
+to interpret the referenced claim and evidence state.
 
-## Outcome And Authority
+Record only the selected Claim IDs, their catalog reference, and this
+milestone's delta and acceptance. Do not copy stable claim entries, supported
+outcomes, depth, or fidelity from the catalog.
 
-- Product outcome:
+## Claim Selection And Delta
+
+- Claim catalog reference:
+- Claim IDs:
+- Delta in this milestone:
+- Acceptance for this delta:
 - Project authority and acceptance owner:
 - Scope / non-goals:
 - Governance level and permission mode:
@@ -16,7 +25,7 @@ independent release, authority, or cross-milestone acceptance boundary.
 
 ## Acceptance And Execution
 
-- Observable acceptance:
+- Acceptance checks for this delta:
 - Affected paths/contracts:
 - Dependencies and useful serial/parallel boundaries:
 - Project-required focused checks and final CI gate, if any:
@@ -53,3 +62,5 @@ Apply `docs/SAGE_CORE.md#sage-completion-001`. Reference authority,
 `ACTIVE_CONTEXT`, review/check evidence, and the project acceptance decision;
 do not duplicate current status/findings/blockers/next action. A closeout is an
 optional historical outcome index after acceptance, not an acceptance engine.
+Reuse still-current evidence; supporting work and milestone count do not create
+additional final proof runs.

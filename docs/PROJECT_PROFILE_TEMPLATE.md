@@ -3,6 +3,9 @@
 Use this file to define the durable project boundary. Replace every
 placeholder before implementation work depends on this profile.
 
+This profile declares project requirements and goals, then references the
+project claim catalog. Stable claim entries live only in that catalog.
+
 ## Product Summary
 
 Describe what the product does, who it serves, and the primary value it
@@ -40,9 +43,14 @@ provides.
 
 ## Product Requirements
 
-| ID | Requirement | Acceptance |
-|---|---|---|
-| `REQ-001` | `<requirement>` | `<acceptance evidence>` |
+Claim catalog reference: `<project capability map instantiated from
+docs/templates/CAPABILITY_MAP_TEMPLATE.md>`
+
+Do not copy stable claim entry, outcome, depth, or fidelity fields here.
+
+| Requirement ID | Requirement | Goal IDs | Claim IDs In Catalog |
+|---|---|---|---|
+| `R-001` | `<required capability or constraint>` | `<G-...>` | `<CLAIM-...>` |
 
 ## Security And Privacy Boundaries
 

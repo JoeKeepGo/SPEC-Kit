@@ -2,10 +2,13 @@
 
 Updated: `<RFC3339 timestamp>`
 
-This is the exclusive owner of the current objective, status, findings,
-blockers, and next action. Replace changed facts; do not append a diary.
+This owns the compact coordination snapshot and normative intent: objective,
+status, findings, blockers, and next action. It does not own underlying machine
+facts. Follow
+[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001) and
+replace changed facts rather than appending a diary.
 
-## Current Objective
+## Normative Intent And Coordination
 
 - Objective:
 - Status:
@@ -13,11 +16,19 @@ blockers, and next action. Replace changed facts; do not append a diary.
 - Governance / permission:
 - Human acceptance owner:
 
-## Current Evidence
+## Observed Machine Snapshot
 
-- Repository / branch / revision:
-- Changed surfaces and evidence references:
-- Project-native checks and current results/limitations:
+- Repository / branch / revision / dirty state (`observed-at`, Git source):
+- Runtime identity / version / configuration / process state (`observed-at`,
+  source, or `N/A`):
+- Project-native test or review result (`observed-at`, producing source, bound
+  inputs, and limitations):
+- Artifact identity / contents / build receipt (`observed-at`, source, or
+  `N/A`):
+- Changed surfaces and attributable evidence references:
+
+Direct Git, runtime, test, and artifact observations override a stale or
+contradictory snapshot. Refresh only the affected copied facts and claims.
 
 ## Decisions And Boundaries
 

@@ -63,6 +63,12 @@ Evidence records what was checked, against which scope and inputs, and with
 what result. It never creates permission or acceptance. `PASS`, `WAIVED`,
 `SKIPPED`, `UNAVAILABLE`, and incomplete are distinct.
 
+Capability-claim trust is canonical in
+[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+Historical acceptance records an immutable past event, not current trust.
+Evidence cannot outrun its claim: it supports only the realization depth and
+target fidelity actually checked.
+
 Completion is eligible only when the authorized scope is finished, applicable
 project-required checks pass or are explicitly waived by their owner, evidence
 is truthful, and no blocking finding or approval gate remains. Mechanical

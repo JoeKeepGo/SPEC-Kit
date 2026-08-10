@@ -1,7 +1,11 @@
 # Technical Design Template
 
 Use this document to describe how the project is structured and how major
-components interact.
+components interact. Stable material claim definitions remain in the project
+claim catalog. This design records only how Claim IDs map to composition and
+delivery implementation.
+
+Claim catalog reference: `<project capability map>`
 
 ## Architecture Summary
 
@@ -9,9 +13,15 @@ Describe the target architecture in a few paragraphs.
 
 ## Components
 
-| Component | Owns | Does Not Own |
+| Component | Owns | Composition / Wiring | Does Not Own |
+|---|---|---|---|
+| `<component>` | `<responsibilities>` | `<registration, configuration, collaborators>` | `<non-responsibilities>` |
+
+## Claim Implementation Mapping
+
+| Claim ID | Composition / Wiring Implementation | Delivery Implementation (if claimed) |
 |---|---|---|
-| `<component>` | `<responsibilities>` | `<non-responsibilities>` |
+| `CLAIM-...` | `<components, registration, configuration, and entry-path implementation>` | `<package, deployment, migration, or consumption implementation>` |
 
 ## Data Ownership
 
@@ -20,9 +30,9 @@ exports. If the project has no durable data, state that explicitly.
 
 ## Public Contracts
 
-| Contract | Owner | Consumers | Evidence |
-|---|---|---|---|
-| `<contract>` | `<owner>` | `<consumers>` | `<tests or smoke>` |
+| Contract | Owner | Consumers |
+|---|---|---|
+| `<contract>` | `<owner>` | `<consumers>` |
 
 ## Runtime Boundaries
 
@@ -30,7 +40,8 @@ Describe processes, services, CLIs, jobs, workers, devices, databases, queues,
 or other runtime boundaries that apply to this project.
 
 Use `not applicable` only with a reason when the project has no runtime
-boundary.
+boundary. Connect applicable boundaries to claims only in the Claim
+Implementation Mapping; do not restate claim outcomes or proof requirements.
 
 ## Error Handling
 

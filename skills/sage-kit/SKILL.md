@@ -1,7 +1,7 @@
 ---
 name: sage-kit
-description: 'Use only when SAGE-Kit is explicitly invoked, requested for adoption, or selected by current project authority. Routes model-native SPEC, planning, execution, review, handoff, and closeout without imposing SAGE-Kit on unrelated work.'
-disable-model-invocation: true
+description: 'Use only for a SAGE-Kit adoption request, explicit $sage-kit invocation, or Standard/Heavy, acceptance, review, corrective, or release work in a project that has already adopted SAGE-Kit. Do not implicitly load this complete Skill for Light work unless the user explicitly overrides the kernel-only route. Absent an adoption request or explicit invocation, do not activate for ordinary chat, unrelated questions, or projects that have not adopted SAGE-Kit.'
+disable-model-invocation: false
 ---
 
 # SAGE-Kit
@@ -10,11 +10,32 @@ SAGE-Kit is an activation and routing Skill. It does not replace project SPEC,
 scope, permissions, gates, tests, evidence owners, or acceptance authority.
 No CLI, package runtime, daemon, or hidden validator is required.
 
-## Activate Narrowly
+## Automatic Activation
 
-Activate only when the user invokes SAGE-Kit, asks to adopt it, or the current
-project explicitly routes work through it. Do not impose it on generic coding,
-planning, review, or debugging.
+SAGE-Kit adoption does not depend on `$sage-kit` appearing in every prompt.
+An automatic project-instruction entry loads the lightweight kernel defined by
+[`docs/agent/CLAIM_EVIDENCE_TRUST.md`](../../docs/agent/CLAIM_EVIDENCE_TRUST.md).
+
+- Light work must use only that kernel when current project instructions are
+  sufficient. Do not implicitly load this complete Skill unless the user
+  explicitly overrides the kernel-only route.
+- Standard or Heavy work, and acceptance, review, corrective, or release work,
+  loads this complete Skill once for the active task.
+- The first progress update after activation emits this non-persistent marker:
+
+SAGE_ACTIVE source=<project-entry> governance=<Light|Standard|Heavy> authority=<current-reference> profiles=<selected-or-none>
+
+It is routing state, not execution, safety, permission, containment, or
+compliance proof and is never persisted to project documents, memory, receipts,
+ledgers, or runtime state.
+- Explicit invocation remains an override and diagnostic path. It is required
+  as a fallback only when the host has neither automatic project instructions
+  nor implicit Skill invocation.
+
+Absent an adoption request or explicit invocation, do not activate for ordinary
+chat, unrelated questions, or a project that has not adopted SAGE-Kit. Host
+project instructions and implicit Skill matching guide model behavior; they do
+not create hard enforcement.
 
 Project-owned current authority wins over framework guidance. Resolve, in
 order:
@@ -27,7 +48,8 @@ order:
 
 Missing or contradictory required authority fails closed before mutation.
 Historical documents are references unless current authority explicitly
-selects them. `ACTIVE_CONTEXT` is compact current truth, not a second SPEC.
+selects them. `ACTIVE_CONTEXT` is a compact handoff snapshot, not a second SPEC
+or an owner of machine-observed facts.
 
 ## Route Only What Is Needed
 
@@ -37,6 +59,7 @@ selects them. `ACTIVE_CONTEXT` is compact current truth, not a second SPEC.
 | Roadmap, milestone, wave, or phase planning | `references/planning.md` |
 | Implementation, debugging, or delegated work | relevant sections of `references/execution.md` |
 | Review, corrective, handoff, acceptance, closeout | `references/review-completion.md` |
+| Capability realization or claim-evidence trust | `docs/agent/CLAIM_EVIDENCE_TRUST.md` when the framework checkout or source archive is available |
 | Core authority and lifecycle | `docs/SAGE_CORE.md` when the framework checkout or source archive is available |
 | Graph and Node Result | `contracts/graph/v1/` only when Graph adds decision value |
 
@@ -90,6 +113,13 @@ same or narrower boundary. Parallel writers need disjoint ownership and one
 integration owner. A subagent never gains product, submit, waiver, or
 acceptance authority by delegation.
 
+The controller loads this Skill and selected profiles once for the active task,
+then passes the boundary into delegated work. Descendants do not recursively
+bootstrap SAGE-Kit, reload the same Skill through a nested workflow, or create
+a duplicate review of the same unchanged boundary. When a host isolates
+subagent context, provide only the task-relevant profile and boundary needed by
+that descendant.
+
 Continuation depends on the host and is bounded to already admitted,
 preauthorized milestones. The coordinator envelope names authority boundary,
 admitted milestones, completion predicate, next admission, drift check, resume
@@ -104,6 +134,12 @@ Use focused checks for each change, affected-only verification at a boundary,
 and project CI once per unchanged final candidate when required. Reuse evidence
 only when its inputs and scope are unchanged. A corrective successor may run CI
 again and receives targeted re-review without replaying unrelated lanes.
+
+Capability and evidence claims follow
+[`docs/agent/CLAIM_EVIDENCE_TRUST.md`](../../docs/agent/CLAIM_EVIDENCE_TRUST.md).
+Do not create a claim matrix unless one compact table adds decision value, and
+do not admit product, package, or E2E proof merely because work was split into
+more milestones.
 
 Continue without repeated approval while findings decrease inside the same
 authorized corrective scope. Two consecutive no-progress rounds for the same
