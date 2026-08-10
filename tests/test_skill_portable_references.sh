@@ -141,7 +141,7 @@ while IFS='|' read -r package_path package_digest; do
 done < "$package_entries"
 
 bootstrap=$skill_root/references/framework/docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md
-tr '\n' ' ' < "$bootstrap" | grep -Eq 'package identity[[:space:]]+and selected[[:space:]]+resource digest' || fail 'bootstrap handoff omits package identity or selected resource digest'
+sed 's/\r$//' "$bootstrap" | tr '\n' ' ' | grep -Eq 'package identity[[:space:]]+and selected[[:space:]]+resource digest' || fail 'bootstrap handoff omits package identity or selected resource digest'
 grep -Fq 'never the activation marker' "$bootstrap" || fail 'bootstrap handoff does not prohibit activation-marker propagation'
 
 # Manifest-owned canonical Markdown is closed recursively. Project-owned and
