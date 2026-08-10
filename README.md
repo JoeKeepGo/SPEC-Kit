@@ -35,14 +35,22 @@ does not need a Graph.
 
 ## Quick Adoption
 
-1. Copy or reference [`skills/sage-kit`](skills/sage-kit) through your host's
+Install the Skill once, bootstrap each project, and then work normally:
+
+1. Install or reference [`skills/sage-kit`](skills/sage-kit) through the host's
    Skill mechanism.
-2. Keep a compact project-owned `ACTIVE_CONTEXT` for current truth and handoff.
-3. Point the model to the active SPEC, allowed paths, acceptance criteria, and
-   approval boundaries.
-4. Select Light, Standard, or Heavy governance from actual risk.
-5. Run focused checks during implementation and project CI once per unchanged
-   final candidate when a project, merge, or release gate requires it.
+2. Add the lightweight project entry from the
+   [`AGENTS.md` bootstrap template](docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
+   and point it to current project authority. Claude Code projects use a
+   `CLAUDE.md` that imports the bootstrap; see the host references.
+3. Let automatic project instructions handle Light work. Standard or Heavy
+   work and acceptance, review, corrective, or release tasks implicitly load
+   the complete Skill once.
+4. Use explicit `$sage-kit` invocation to override or diagnose routing. It is
+   only the required fallback when a host has neither automatic project
+   instructions nor implicit Skill invocation.
+5. Keep project-native focused checks and run final CI only when the project,
+   merge, release, or acceptance gate requires it.
 
 Start with [`SAGE_CORE.md`](docs/SAGE_CORE.md),
 [`AGENT_HARNESS.md`](docs/agent/AGENT_HARNESS.md), and the reusable
@@ -63,8 +71,12 @@ automatically receive write, corrective, submit, or acceptance authority.
 
 - The project owns product requirements, threat model, scope, permissions,
   gates, tests, and acceptance.
-- `ACTIVE_CONTEXT` owns current handoff truth; historical documents are
-  references unless current authority explicitly selects them.
+- Git, runtimes, checks, reviews, and artifacts own the facts they expose;
+  project documents own intent and decisions. `ACTIVE_CONTEXT` is a compact
+  handoff snapshot, not a second source of machine truth.
+- Capability realization and evidence trust are owned by
+  [`CLAIM_EVIDENCE_TRUST.md`](docs/agent/CLAIM_EVIDENCE_TRUST.md); other
+  surfaces link to it instead of duplicating the model.
 - [`contracts`](contracts) contains optional static, language-neutral Graph and
   Node Result schemas. Contract presence never executes work or grants
   authority.
@@ -74,10 +86,13 @@ automatically receive write, corrective, submit, or acceptance authority.
 
 ## Supported Hosts
 
-The Skill includes guidance for Codex, Claude Code, OpenCode, and Kimi. It can
-coexist with specialist Skills, plugins, MCP tools, native subagents, and
-project-specific automation. Those capabilities remain subject to project
-authority and must not silently broaden scope.
+The Skill includes guidance for Codex, Claude Code, OpenCode, and Kimi. Codex,
+Kimi Code CLI, and OpenCode support project `AGENTS.md`; Claude Code uses
+`CLAUDE.md` and can import that bootstrap. These instruction channels and
+implicit Skill routing guide the model but do not create hard enforcement.
+SAGE-Kit can coexist with specialist Skills, plugins, MCP tools, native
+subagents, and project-specific automation. Those capabilities remain subject
+to project authority and must not silently broaden scope.
 
 Cross-milestone continuation depends on the host and is bounded to already
 admitted, preauthorized milestones. The coordinator records authority,
@@ -113,9 +128,7 @@ scripts/            Lightweight repository-integrity checks
 tests/              Shell/PowerShell tests for shipped host hooks
 ```
 
-The first model-native release uses only GitHub's source archive; it does not
-ship a bundle, checksum artifact, or executable runtime. See
-[`RELEASE.md`](docs/RELEASE.md) and the
+For migration from the former executable line, see the
 [`model-native migration guide`](docs/MIGRATION_MODEL_NATIVE.md).
 
 ## Fit

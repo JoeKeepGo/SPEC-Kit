@@ -30,3 +30,26 @@ return evidence to the human acceptance owner.
 
 Legacy runtime compatibility belongs to the old immutable release tag. The new
 line intentionally ships no compatibility executable.
+
+## Migrate From Explicit-Only Activation
+
+The model-native line no longer requires `$sage-kit` in every prompt:
+
+1. Install or reference the Skill once through the host's normal Skill
+   mechanism.
+2. Add the lightweight project entry from
+   [`AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md`](templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
+   using the host's documented automatic instruction file. Claude Code uses a
+   `CLAUDE.md` project instruction and may import the `AGENTS.md` bootstrap.
+3. Let the project entry carry Light work. Permit implicit loading of the
+   complete Skill for Standard or Heavy work and for acceptance, review,
+   corrective, or release work.
+4. Keep explicit invocation as an override and diagnostic. Require it only
+   when the host supports neither automatic project instructions nor implicit
+   Skill invocation.
+
+After activation, the first progress update reports the non-persistent
+`SAGE_ACTIVE` routing marker. It is not execution, safety, permission, or
+compliance proof and is not written to project documents, memory, receipts, or
+ledgers. This migration adds no CLI, script, hook, validator, scheduler,
+daemon, or framework runtime.

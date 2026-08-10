@@ -2,12 +2,16 @@ interface:
   display_name: "SAGE-Kit"
   short_description: "Model-native SPEC, execution, and review governance"
   default_prompt: >-
-    Use $sage-kit only when explicitly requested or selected by current project
-    authority. Apply the project's active SPEC, permission and human-gate
-    boundaries. Use native model brainstorming, planning, test-driven
-    implementation, debugging, subagent orchestration, review, verification,
-    and branch completion without loading an additional composite workflow.
-    Descendants inherit the same restriction and all project boundaries.
+    Apply SAGE-Kit automatically when current project instructions select it.
+    Use the lightweight project kernel for Light work; load the complete Skill
+    once for Standard or Heavy work and for acceptance, review, corrective, or
+    release work. Route SAGE-governed planning, implementation, milestones,
+    handoff, and capability or claim-evidence trust through the relevant
+    profile. Explicit $sage-kit invocation is an override or diagnostic, and a
+    fallback only when the host lacks both automatic project instructions and
+    implicit Skill invocation. Descendants inherit the same or narrower
+    project boundary without nested Skill reloads or duplicate review. Apply
+    the active SPEC, permission, evidence-owner, and human-gate boundaries.
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true
