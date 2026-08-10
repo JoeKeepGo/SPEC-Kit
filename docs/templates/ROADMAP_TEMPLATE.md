@@ -1,15 +1,17 @@
 # Roadmap Template (Compatibility Alias)
 
-`ROADMAP_TEMPLATE.md` remains a stable compatibility pointer to the canonical
-`docs/templates/MILESTONE_ROADMAP_TEMPLATE.md`. Use that template for new
-roadmaps and future template changes; this alias creates no second roadmap
-authority.
+`ROADMAP_TEMPLATE.md` remains a stable compatibility pointer to the optional
+`docs/templates/MILESTONE_ROADMAP_TEMPLATE.md`. When a project selects a
+roadmap, that template is available as a starting point; this alias creates no
+second roadmap authority and does not require a roadmap.
 
-The canonical template preserves the roadmap rules, capability-map link,
-overview, milestone goal, primary capability, inputs, deliverables, validation,
-closeout, non-goals, and required phase-decomposition fields.
+Use project-selected paths. Include a capability-map row only when the project
+has selected a capability map, roadmap rows only when sequencing adds value,
+and phase or milestone rows only when an explicitly selected profile or
+concrete risk requires decomposition.
 
-Roadmaps retain the zero-to-product sequence and the Milestone, Wave, Phase,
-and Lane depth the project needs. Thin documents remove repeated generic governance
-prose only; it does not impose a fixed document or stage count. See
+An accepted compact blueprint may proceed directly from product intent to
+implementation, delivery, and acceptance evidence. When a roadmap is useful,
+it may retain the Milestone, Wave, Phase, and Lane depth the project needs
+without imposing a fixed document or stage count. See
 `docs/SAGE_CORE.md#sage-grf-001`.

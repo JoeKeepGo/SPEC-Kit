@@ -38,13 +38,12 @@ List evidence the project owner can understand without reading code.
 
 These are planning outputs, not executable authorization.
 
-| Output | Path | Status |
-|---|---|---|
-| Simplified project profile draft | `docs/PROJECT_PROFILE.md` | `<draft/ready>` |
-| Capability map | `docs/CAPABILITY_MAP.md` | `<draft/ready>` |
-| Draft milestone candidates | `docs/CAPABILITY_MAP.md` | `<draft/ready>` |
-| Granularity audit | `docs/CAPABILITY_MAP.md` | `<pending/pass/fail>` |
-| Executable milestone roadmap | `docs/MILESTONE_ROADMAP.md` | `<not_started/promoted>` |
+| Output | Project-Selected Path | Status | Include When |
+|---|---|---|---|
+| Accepted compact blueprint / active SPEC | `<project-selected path>` | `<draft/ready>` | Always; this may authorize a direct zero-to-product route. |
+| Capability map and any granularity audit | `<project-selected path or omit>` | `<conditional status>` | Uncertainty, dependencies, or risk make capability decomposition useful. |
+| Executable roadmap | `<project-selected path or omit>` | `<conditional status>` | Sequencing or coordination needs a roadmap. |
+| Phase or milestone authority rows | `<project-selected path or omit>` | `<conditional status>` | An explicitly selected profile or concrete risk requires them. |
 
 ## Readiness Before Implementation
 

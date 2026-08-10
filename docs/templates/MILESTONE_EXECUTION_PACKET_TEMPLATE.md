@@ -1,11 +1,16 @@
 # Milestone Execution Packet Template
 
-Use this packet from Project Manager Controller to Coder Controller.
+Use this packet only when an explicit Heavy/formal profile or project authority
+selects a formal Project Manager Controller to Coder Controller transfer. It is
+not a default Standard handoff. Omit every conditional section that does not
+apply; the remaining depth is available for complex milestone, wave, phase,
+Graph, rollback, and review coordination.
 
 Level/permission and submit semantics are canonical at
 `docs/agent/GOVERNANCE_LEVELS.md#sage-auth-004` and
 `docs/agent/GOVERNANCE_LEVELS.md#sage-auth-007`. This packet retains every
-project-instance field that assigns those boundaries to controllers and workers.
+applicable project-instance field that assigns those boundaries to controllers
+and workers.
 
 ```markdown
 Milestone:
@@ -15,14 +20,15 @@ Objective:
 Primary Capability:
 
 Source Docs:
-- Active context:
-- Document routing:
-- Entry gate:
-- Milestone ledger:
-- Capability map:
-- Phase docs:
-- Quality gates:
-- Approval gates:
+- Project authority / active SPEC:
+- Current context: `<project-selected path/system or omitted>`
+- Document routing: `<project-selected path or omitted>`
+- Entry gate: `<project-selected authority or omitted>`
+- Milestone history/evidence index: `<project-selected path or omitted>`
+- Capability claims owner: `<active SPEC/acceptance criteria/map or omitted>`
+- Phase authority: `<project-selected paths or omitted>`
+- Quality gates: `<project-selected authority or omitted>`
+- Approval gates: `<instantiated project/host gates or omitted>`
 
 Execution Mode:
 - `Phase Execution`, `Wave Execution`, or `Session Orchestration`
@@ -102,7 +108,7 @@ Coder Controller Integration Edit Policy:
 - Maximum files or surfaces:
 - Worker dispatch required for:
 - Direct edits forbidden when: `<any file is worker-owned>`
-- Result packet must explain skipped worker dispatch: `<yes/no>`
+- Selected result/handoff must explain skipped worker dispatch: `<yes/no>`
 
 Worktree Isolation Policy:
 - Allowed mode: `NONE`, `MILESTONE_WORKTREE`, `PHASE_WORKTREE`, `LANE_WORKTREE`, or `REVIEW_WORKTREE`
@@ -218,5 +224,5 @@ Closeout Requirement:
 Stop Conditions:
 
 Expected Coder Output:
-- `docs/templates/MILESTONE_RESULT_PACKET_TEMPLATE.md`
+- `<project-selected result/handoff shape; formal result packet only when selected>`
 ```

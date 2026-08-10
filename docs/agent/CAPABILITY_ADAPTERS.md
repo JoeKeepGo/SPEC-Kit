@@ -7,12 +7,19 @@ Capabilities include host-native tools, specialist Skills, plugins, MCP tools,
 subagents, browsers, databases, CI, and project automation.
 
 Activation is also host capability routing. Prefer the host's documented
-automatic project-instruction entry, then its documented implicit Skill route.
-Require explicit invocation only when neither exists. Availability metadata,
-project instructions, and model-selected Skill loading are guidance channels;
-none proves hard enforcement, execution, safety, or containment.
+automatic project-instruction entry, then its documented implicit Skill route,
+only after adoption preflight and current version/configuration evidence show
+that the relied-on behavior is available. These are expected capabilities, not
+unconditional guarantees. Use explicit invocation whenever adoption, current
+authority, or required Skill content cannot be observed or resolved through
+those routes. Availability metadata, project instructions, and model-selected
+Skill loading are guidance channels; none proves hard enforcement, execution,
+safety, or containment.
 
-Use this lifecycle:
+Routine native read-only tools use a compact adapter path: confirm relevance
+and authority, invoke within the read-only boundary, and attribute the output.
+Use the full lifecycle for external, credentialed, mutating, delegated, or
+materially evidentiary capabilities:
 
 1. detect task-relevant capability metadata;
 2. confirm project authority permits its use;

@@ -6,11 +6,11 @@
   "resources": {
     "graph_schema": {
       "resource": "graph.schema.json",
-      "canonical_sha256": "f065b4e797989a0fe928cd15a5e4153006280a3f4dbfc04638b99053241436e8"
+      "canonical_sha256": "b135bdf9205ce2484e0d9b9d26b45b385959ce5a3e74f7d80f0c7c56d7e88e90"
     },
     "node_result_schema": {
       "resource": "node-result.schema.json",
-      "canonical_sha256": "2b6c19c5f0dca83d19abe7a2a13643b1dfce36413ea06236a3d294e9aad71206"
+      "canonical_sha256": "c2ec2b4c8cb7ddbf2e1c13b78584aed59739bcdc91163117222e7063efb9f0b9"
     }
   },
   "digest_semantics": "SHA-256 over exact canonical resource bytes; this is resource integrity only and not a semantic graph digest.",
@@ -19,6 +19,7 @@
     "reference_integrity": "Every depends_on and join requires identity must resolve to exactly one declared node.",
     "acyclicity": "The dependency relation must be acyclic before execution or readiness is claimed.",
     "join_semantics": "Join policy must preserve required work and may not bypass failures, human gates, corrective closure, safety decisions, or project authority.",
+    "continuation_boundary": "goal-based autonomy requires an external completion verifier and bounded continuation-envelope references for authority, admission, drift, stop, and convergence controls. These declarations do not execute controls, admit work, permit continuation, or grant authority.",
     "external_gate_boundary": "Work dependent on a manual-gate or corrective-join decision must remain behind that decision and may be represented in a later project-authorized Graph generation.",
     "evidence_rule": "A consumer-selected semantic validator or documented model review must establish these cross-node requirements. Without attributable evidence, semantic validation is UNPROVEN and must not be reported as PASS."
   },

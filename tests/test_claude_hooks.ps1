@@ -38,8 +38,12 @@ try {
     Check 'exact configured relative path blocked' 2 (Invoke-Hook '{"tool_input":{"file_path":"docs/ACTIVE_CONTEXT.md"}}' $tmp)
     Check 'exact configured canonical path blocked' 2 (Invoke-Hook '{"tool_input":{"file_path":"docs/sub/../DOC_ROUTING.md"}}' $tmp)
     Check 'same filename outside configured path allowed' 0 (Invoke-Hook '{"tool_input":{"file_path":"elsewhere/docs/ACTIVE_CONTEXT.md"}}' $tmp)
-    Check 'shell text is not heuristically inspected' 0 (Invoke-Hook '{"tool_input":{"command":"echo x >> docs/ACTIVE_CONTEXT.md"}}' $tmp)
-    Check 'unsupported event shape remains advisory' 0 (Invoke-Hook 'not json' $tmp)
+    Check 'shell text is not heuristically inspected' 0 (Invoke-Hook '{"tool_input":{"file_path":"notes.txt","command":"echo x >> docs/ACTIVE_CONTEXT.md"}}' $tmp)
+    Check 'malformed envelope blocks when configured' 2 (Invoke-Hook 'not json' $tmp)
+    Check 'malformed file path token blocks when configured' 2 (Invoke-Hook '{"tool_input":{"file_path":"notes.txt"}} trailing text' $tmp)
+    Check 'missing file path blocks when configured' 2 (Invoke-Hook '{"tool_input":{}}' $tmp)
+    Check 'non-string file path blocks when configured' 2 (Invoke-Hook '{"tool_input":{"file_path":42}}' $tmp)
+    Check 'wrong-type envelope blocks when configured' 2 (Invoke-Hook '{"tool_input":"docs/ACTIVE_CONTEXT.md"}' $tmp)
 
     $env:SAGE_PROTECTED_PATHS = $null
     Check 'unconfigured hook allows path' 0 (Invoke-Hook '{"tool_input":{"file_path":"docs/ACTIVE_CONTEXT.md"}}' $tmp)

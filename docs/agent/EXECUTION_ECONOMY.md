@@ -11,18 +11,18 @@ Apply the claim/evidence trust rules in
 
 - During implementation, run only project-native focused checks for changed
   behavior.
-- Trace changed implementation, wiring, entry paths, targets, contracts, and
-  acceptance inputs to affected claims. Invalidate only evidence for those
-  claims, then verify only their affected contracts and integrations.
+- Use the canonical relevant-input inventory in
+  [`CLAIM_EVIDENCE_TRUST.md`](CLAIM_EVIDENCE_TRUST.md#sage-trust-001):
+  implementation, wiring, entry path, target, contract, acceptance input, and
+  delivered artifact. Trace changes to affected claims, invalidate only their
+  affected evidence, and preserve and reference unaffected evidence.
 - Reuse attributable evidence at a later revision when the relevant diff from
   its bound revision leaves the claim inputs, scope, and target unchanged.
-- Admit final product, package, or E2E proof only when both conditions hold:
-  (1) the claim or acceptance criteria require that proof class; and (2) that
-  class is first being established for the claim, relevant wiring, entry paths,
-  or delivered artifacts changed, an explicit product gate requires it, or
-  release acceptance requires it. A new implementation-only claim does not by
-  itself admit E2E. Run admitted expensive proof once for the final unchanged
-  candidate.
+- Admit final product, package, or E2E proof only under the canonical admission
+  and rerun conditions in `CLAIM_EVIDENCE_TRUST.md#sage-trust-001`; do not
+  maintain a narrower local rerun list. A new implementation-only claim does
+  not by itself admit E2E. Run admitted expensive proof once for the final
+  unchanged candidate.
 - Run broad project CI once when required for the final unchanged candidate. A
   successor receives replacement final proof only when its relevant inputs
   changed; milestone count alone never adds runs.
@@ -42,9 +42,10 @@ evidence, approval gates, safety boundaries, or validator/required project
 check failure. Ordinary P2 may be fixed directly or carried as a concern. P3
 never blocks.
 
-A corrective receives one targeted re-review of the affected boundary. Full
-review is repeated only when semantics, permissions, source authority, or a
-cross-boundary contract changed.
+A corrective receives one targeted re-review of the already reviewed affected
+boundary. That targeted re-review is sufficient for semantic changes inside
+the boundary. Repeat a full review only when permission or source authority
+changes, or when the correction creates a broad cross-boundary change.
 
 <a id="sage-loop-008"></a>
 ## Convergence
@@ -55,10 +56,14 @@ finding is not scope growth when it is direct evidence from the same fix.
 
 Within the same authorized corrective scope, continue while findings decrease;
 no new Project Manager approval is needed each round. After two consecutive
-no-progress rounds for the same root cause, return `BLOCKED`. Stop immediately
-for authority change, a new threat-model or safety decision, destructive or
-production action, credential use, product acceptance, merge/release, or
-unapproved scope expansion.
+no-progress rounds for the same root cause, reassess the strategy and return a
+diagnostic handoff with the attempted approaches, observed evidence, and next
+decision. Use `BLOCKED` only when that diagnosis establishes a genuine
+authority, permission, required-input, or required-evidence gap that prevents
+safe progress. Otherwise return a non-blocking handoff or continue with the
+revised strategy. Stop immediately for authority change, a new threat-model or
+safety decision, destructive or production action, credential use, product
+acceptance, merge/release, or unapproved scope expansion.
 
 <a id="sage-loop-012"></a>
 ## Evidence Reuse

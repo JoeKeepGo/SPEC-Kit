@@ -4,8 +4,11 @@ Project Owner Entry is the lightweight SAGE-Kit path for a person who knows the
 goal, business need, or user problem but may not know how to describe software
 implementation work yet.
 
-It turns an idea into planning inputs. It must not produce an executable
-roadmap directly.
+It turns an idea into a compact project blueprint and the planning inputs the
+idea actually needs. The path is risk proportional: broad or uncertain ideas
+may need discovery artifacts before an executable roadmap, while an already
+bounded idea may proceed from an accepted profile blueprint directly to a
+bounded plan.
 
 ## Use When
 
@@ -20,7 +23,7 @@ accepted phase document.
 
 ## Intake Questions
 
-Start with five questions:
+Use only the unanswered parts of these five questions:
 
 1. What do you want to build or change?
 2. Who will use it?
@@ -28,28 +31,34 @@ Start with five questions:
 4. What can a user do when it succeeds?
 5. What are you most worried about?
 
-Ask follow-up questions only when one of these answers is too vague to produce
-acceptance criteria, non-goals, risk notes, or a first capability map.
+Do not repeat questions already answered by current authority. Ask follow-up
+questions only when an answer is too vague to produce the compact blueprint,
+acceptance criteria, non-goals, or risk notes needed for the next decision.
 
 ## Output Sequence
 
-Project Owner Entry produces drafts in this order:
+Project Owner Entry always produces or updates the compact project profile
+blueprint. Add the remaining outputs only when uncertainty, risk, or project
+authority needs them:
 
-1. project owner intake;
-2. simplified project profile draft;
-3. capability map;
-4. draft milestone candidates;
-5. milestone granularity audit;
-6. first executable plan only after the owner accepts the selected outcome and
+1. project owner intake, when the idea is not already bounded;
+2. compact project profile blueprint, or an equivalent project-selected
+   section;
+3. capability map, for broad discovery or claim-catalog value;
+4. draft milestone candidates and granularity audit, when multiple outcomes or
+   boundaries need decomposition;
+5. first executable plan after the owner accepts the selected outcome and
    boundaries.
 
-The intake, profile draft, capability map, draft candidates, and audit are
-planning material. They are not authorization to start implementation.
+Any intake, profile draft, capability map, draft candidates, and audit are
+planning material. They are not authorization to start implementation. For an
+already bounded idea, do not require intermediate documents that add no
+decision value.
 
-## Capability Map Before Roadmap
+## Optional Capability Discovery
 
-Before creating an executable milestone roadmap, consider the capability
-categories relevant to the stated goal:
+For broad or uncertain work, consider the capability categories relevant to
+the stated goal before creating an executable milestone roadmap:
 
 - user-facing capabilities;
 - operator or administrator capabilities;
@@ -60,6 +69,8 @@ categories relevant to the stated goal:
 
 These categories are advisory prompts, not product requirements. Include only
 capabilities that the project owner or active project SPEC places in scope.
+The active SPEC or acceptance criteria may instead own compact capability
+claims and review references; no separate capability map is required.
 SAGE-Kit must not invent a product threat model, security requirement, safety
 property, deployment target, or approval gate. Milestones are derived from
 in-scope outcomes. One independently acceptable outcome may include cohesive
@@ -76,13 +87,17 @@ The project owner decides:
 - whether user-visible evidence proves the desired outcome.
 
 The project owner should not be asked to accept implementation claims without
-tests, runtime smoke, review evidence, or visible evidence.
+attributable evidence at the depth and fidelity selected by the acceptance
+criteria. Focused checks, runtime smoke, review evidence, or visible evidence
+are options, not an automatic requirement to produce every class.
 
 ## Granularity Guardrail
 
-Project Owner Entry must not produce an executable roadmap directly. It
-produces candidate capabilities and draft milestones. Split a milestone when
-it cannot be independently accepted and bounded.
+For broad or uncertain work, Project Owner Entry produces candidate
+capabilities and draft milestones before promotion. For an already bounded
+idea, the accepted compact blueprint may feed a bounded executable plan
+directly. Split a milestone when it cannot be independently accepted and
+bounded.
 
 Red flags:
 
@@ -90,8 +105,9 @@ Red flags:
 - a milestone crosses scope or permission boundaries without a named decision;
 - a milestone contains an independent release or acceptance boundary;
 - a milestone cannot name one observable acceptance result;
-- a milestone needs broad files or unknown file ownership;
-- a milestone cannot name tests or runtime evidence.
+- a milestone lacks a bounded implementation or contract surface by the point
+  execution authority is requested;
+- a milestone cannot name the acceptance evidence needed for its claims.
 
 ## Capability Adapter Decision
 

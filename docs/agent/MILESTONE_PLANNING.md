@@ -22,6 +22,10 @@ Use the canonical control matrix in
 - Heavy: three to five purposeful documents by default, selected for the
   actual authority, risk, handoff, and evidence needs.
 
+These are information shapes, not required packet types. Execution, result,
+and final-review packets are used only by an explicit Heavy/formal profile or
+when project authority selects them.
+
 ## Readiness
 
 A plan names the product outcome, project authority, scope/non-goals,
@@ -33,7 +37,10 @@ Split a candidate when it cannot be accepted independently, needs a distinct
 scope/permission decision, or combines unrelated outcomes. Do not split a
 cohesive product outcome merely because its implementation spans UI, API, data,
 or runtime support. A capability map is useful for broad discovery but is not a
-universal entry gate.
+universal entry gate. An active SPEC or acceptance criterion may own compact
+capability claims and review references directly. Planning may identify likely
+ownership boundaries before technical design; exact file ownership is required
+only when needed to authorize or safely execute bounded implementation.
 
 ## Execution Shape
 

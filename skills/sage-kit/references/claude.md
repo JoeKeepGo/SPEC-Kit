@@ -3,8 +3,9 @@
 Use Claude Code agents, tool permissions, and optional hooks as host adapters
 to the same project authority. The generic agents do not bind hooks by default.
 
-Claude Code loads project `CLAUDE.md` instructions automatically; it does not
-load `AGENTS.md` directly. A consumer can keep one bootstrap by adding this to
+Claude Code is expected to load project `CLAUDE.md` instructions, but not
+`AGENTS.md` directly, when adoption preflight confirms the current host version
+and configuration do so. A consumer can keep one bootstrap by adding this to
 its project `CLAUDE.md`:
 
 ```markdown
@@ -13,16 +14,18 @@ its project `CLAUDE.md`:
 
 Model-invocable Skills are selected from their descriptions when relevant.
 With SAGE-Kit installed and model invocation enabled, use the project bootstrap
-for Light work and implicitly load the complete Skill for Standard or Heavy,
-acceptance, review, corrective, or release work. Explicit invocation remains
-an override and diagnostic. It is required only when neither automatic project
-instructions nor implicit Skill invocation is available.
+for Light work, Light review, and mechanical corrective work. Load the complete
+Skill for Standard or Heavy, materially semantic review/corrective, acceptance,
+or release work once per controller context; reload after compaction or resume
+when the prior content is no longer observable. Explicit invocation remains an
+override and diagnostic and is required whenever adoption, current authority,
+or required Skill content cannot be observed or resolved through those routes.
 
 `CLAUDE.md` and Skill content are context, not enforced configuration. Claude
-subagents do not automatically inherit a parent Skill; pass the same or
-narrower SAGE boundary explicitly and preload only the profile a descendant
-needs. Do not have descendants re-invoke the complete Skill or repeat the same
-review.
+subagents do not automatically inherit a parent Skill; pass only the same or
+narrower compact SAGE boundary, authority references, and selected profile
+identity. Do not pass the activation marker, have descendants re-invoke the
+complete Skill, or repeat the same review.
 
 The shipped coder and final-review examples preserve role separation. A project
 may explicitly install the path hook only after preflight confirms the host
@@ -38,5 +41,7 @@ worker with no shell/write escape path. Run the matching hook test after
 installation and report unsupported event shapes as a limitation.
 
 Claude session continuation is not project truth. Reconcile the project-owned
-handoff snapshot with repository state and evidence owners on resume.
-Unsupported host features are limitations, not inferred enforcement.
+`ACTIVE_CONTEXT` coordination snapshot with the active SPEC/project authority,
+repository state, and evidence owners on resume; update it only with ownership
+and write permission. Unsupported host features are limitations, not inferred
+enforcement.

@@ -59,7 +59,12 @@
     "completion_verifier": {
       "type": "string",
       "minLength": 1,
-      "description": "Optional external completion verifier reference; the schema does not execute it or treat it as authority."
+      "maxLength": 2048,
+      "description": "External completion verifier reference. It is required for goal-based autonomy, but the schema does not execute it, establish that verification occurred, or treat it as authority."
+    },
+    "continuation_envelope": {
+      "$ref": "#/$defs/continuation_envelope_reference",
+      "description": "External bounded-continuation envelope references. It is required for goal-based autonomy; recording it does not admit work, permit continuation, or grant authority."
     },
     "human_gates": {
       "type": "array",
@@ -87,6 +92,56 @@
     }
   },
   "$defs": {
+    "bounded_reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "continuation_envelope_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "authority_boundary",
+        "admission_control",
+        "drift_check",
+        "stop_conditions",
+        "convergence_rule"
+      ],
+      "properties": {
+        "reference": {
+          "$ref": "#/$defs/bounded_reference",
+          "description": "Reference to the externally owned continuation envelope."
+        },
+        "authority_boundary": {
+          "$ref": "#/$defs/bounded_reference",
+          "description": "Reference to the authority boundary that already governs continuation; this field does not create or widen that authority."
+        },
+        "admission_control": {
+          "$ref": "#/$defs/bounded_reference",
+          "description": "Reference to the admitted milestones and next-admission rule; unreferenced work is not admitted."
+        },
+        "drift_check": {
+          "$ref": "#/$defs/bounded_reference",
+          "description": "Reference to the external scope, authority, and evidence drift check."
+        },
+        "stop_conditions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/bounded_reference"
+          },
+          "uniqueItems": true,
+          "description": "References to explicit conditions that stop continuation and return control to the named authority."
+        },
+        "convergence_rule": {
+          "$ref": "#/$defs/bounded_reference",
+          "description": "Reference to the external convergence or bounded-handoff rule."
+        }
+      },
+      "description": "A bounded set of references to externally owned continuation controls. These references are descriptive only: they do not execute checks, admit milestones, continue work, decide completion, or grant authority."
+    },
     "source_authority": {
       "type": "object",
       "additionalProperties": false,
@@ -213,5 +268,25 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "autonomy_level"
+        ],
+        "properties": {
+          "autonomy_level": {
+            "const": "goal-based"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "completion_verifier",
+          "continuation_envelope"
+        ]
+      }
+    }
+  ]
 }

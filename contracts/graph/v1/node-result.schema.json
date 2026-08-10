@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:sagekit:graph-contract:v1:node-result",
   "title": "SAGE-Kit Node Result v1",
-  "description": "A language-neutral envelope for observable decisions, evidence references, bounded findings, changed surface, and transition proposals. It does not store private reasoning, complete chat or tool transcripts, secrets, or credentials.",
+  "description": "A language-neutral envelope for observable decisions, evidence references, bounded findings, changed surface, and transition proposals. It does not store private reasoning, complete chat or tool transcripts, secrets, or credentials. Node outcomes do not perform independent review, submit work, accept a product outcome, or close a project lifecycle.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -45,7 +45,7 @@
         "CANCELLED",
         "DONE_WITH_CONCERNS"
       ],
-      "description": "Observable node state or outcome; this enum does not define a state machine. NO_ACTION_REQUIRED is distinct from SUCCEEDED, PASS, and WAIVED, and requires external semantic review before it can satisfy a join. DONE_WITH_CONCERNS requires controller review, cannot auto-advance a phase or acceptance, cannot satisfy a required success join, and is not mapped to SUCCEEDED, PASS, or WAIVED."
+      "description": "Observable node state or outcome; this enum does not define a state machine. SUCCEEDED reports only the bounded declared node outcome and does not imply completion of any separate implementation, independent review, submission, human acceptance, or closure decision. NO_ACTION_REQUIRED is distinct from SUCCEEDED, PASS, and WAIVED, and requires external semantic review before it can satisfy a join. DONE_WITH_CONCERNS requires controller review, cannot auto-advance a phase or acceptance, cannot satisfy a required success join, and is not mapped to SUCCEEDED, PASS, or WAIVED."
     },
     "changed_paths": {
       "type": "array",

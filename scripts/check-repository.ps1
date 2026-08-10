@@ -1,20 +1,21 @@
 $ErrorActionPreference = 'Stop'
 
 $required = @(
-    'README.md',
+    'AGENTS.md',
+    'contracts/canonical-authority-pointers.txt',
+    'contracts/graph/v1/contract.json',
+    'contracts/graph/v1/graph.schema.json',
+    'contracts/graph/v1/node-result.schema.json',
+    'contracts/release-resource-inventory.txt',
+    'contracts/task-dispatch-v2/policy.json',
+    'contracts/task-dispatch-v2/task.schema.json',
+    'contracts/task-dispatch-v2/evidence.schema.json',
     'docs/SAGE_CORE.md',
     'docs/agent/AGENT_HARNESS.md',
     'docs/agent/CLAIM_EVIDENCE_TRUST.md',
     'docs/agent/GOVERNANCE_LEVELS.md',
     'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md',
-    'AGENTS.md',
-    'contracts/graph/v1/contract.json',
-    'contracts/graph/v1/graph.schema.json',
-    'contracts/graph/v1/node-result.schema.json',
-    'contracts/task-dispatch-v2/policy.json',
-    'contracts/task-dispatch-v2/task.schema.json',
-    'contracts/task-dispatch-v2/evidence.schema.json',
-    'contracts/canonical-authority-pointers.txt',
+    'README.md',
     'skills/sage-kit/SKILL.md',
     'skills/sage-kit/agents/openai.yaml'
 )
@@ -23,29 +24,31 @@ foreach ($path in $required) {
 }
 
 $tracked = @(git ls-files)
+$packageManifest = '(^|/)(pyproject\.toml|setup\.py|setup\.cfg|requirements[^/]*\.txt|tox\.ini|noxfile\.py|Pipfile|poetry\.lock|uv\.lock|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb?|deno\.json|Cargo\.toml|Cargo\.lock|go\.mod|go\.sum|pom\.xml|build\.gradle(\.kts)?|settings\.gradle(\.kts)?|Gemfile|Gemfile\.lock|composer\.json|composer\.lock|mix\.exs|rebar\.config|pubspec\.yaml|Package\.swift|[^/]+\.(csproj|fsproj|vbproj))$'
 $forbidden = @($tracked | Where-Object {
-    $_ -match '(^|/)(pyproject\.toml|setup\.py|setup\.cfg|requirements[^/]*\.txt|tox\.ini|noxfile\.py|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$' -or
-    $_ -match '\.(py|pyi|pyc|whl)$' -or $_ -match '\.egg-info/' -or
-    $_ -match '(^|/)(bin|src)/(sagekit|sage-kit)(/|$)'
+    $_ -match '(^|/)(bin|src)/(sagekit|sage-kit)(/|$)' -or
+    $_ -match '(^|/)(sagekit|sage-kit)(\.(sh|ps1|bash|zsh|fish|bat|cmd|exe|py|js|mjs|cjs|ts|tsx|rs|go|java|cs|rb|php))?$' -or
+    ($_ -match $packageManifest -and $_ -notmatch '^(docs|tests|scripts|\.github)/')
 })
-if ($forbidden.Count -ne 0) { throw "forbidden runtime/CLI/package surface:`n$($forbidden -join "`n")" }
+if ($forbidden.Count -ne 0) { throw "forbidden shipped runtime, entrypoint, or executable dependency surface:`n$($forbidden -join "`n")" }
 
-# Scan executable/workflow surfaces only. Ordinary governance prose may discuss
-# runtimes and tests without becoming an executable dependency.
+# Package and interpreter tooling is permitted for docs, tests, and release
+# work. This scans only shipped execution surfaces for SAGE-Kit runtime entry
+# points or attempts to install/invoke SAGE-Kit as an executable dependency.
 $executionSurfaces = @($tracked | Where-Object {
     $_ -notin @('scripts/check-repository.ps1', 'scripts/check-repository.sh') -and
     (
         $_ -like '.github/workflows/*' -or $_ -like '.claude/*' -or
-        $_ -like '.codex/*' -or $_ -like 'scripts/*' -or $_ -like 'tests/*' -or
+        $_ -like '.codex/*' -or $_ -like 'scripts/*' -or
         $_ -like 'skills/*/agents/*' -or $_ -like 'skills/*/references/*/agents/*' -or
-        $_ -like 'skills/*/references/*/hooks/*' -or
-        $_ -match '(^|/)(Makefile|Dockerfile|compose[^/]*\.ya?ml|[^/]*(launch|runner|daemon|scheduler|setup|install)[^/]*\.(sh|ps1|bat|cmd|ya?ml|json|toml))$'
-    ) -and $_ -match '\.(sh|ps1|bash|zsh|fish|bat|cmd|js|mjs|cjs|ts|tsx|rs|go|java|cs|rb|php|ya?ml|json|toml|md)$|(^|/)(Makefile|Dockerfile)$'
+        $_ -like 'skills/*/references/*/hooks/*'
+    ) -and $_ -match '\.(sh|ps1|bash|zsh|fish|bat|cmd|js|mjs|cjs|ts|tsx|rs|go|java|cs|rb|php|ya?ml|json|toml|md)$'
 })
 if ($executionSurfaces.Count -gt 0) {
-    $stale = @(git grep -n -I -E '(^|[;&|()]|run:|command:|exec:|shell:)[[:space:]]*(env[[:space:]]+)?(python([0-9.]*)?|pip([0-9.]*)?|pytest|unittest|sagekit[[:space:]]+(run|validate|check|candidate|checkpoint|resource|packet)|npm|npx|node)[[:space:]]' -- $executionSurfaces)
-    if ($LASTEXITCODE -notin 0, 1) { throw 'executable/workflow reference scan failed' }
-    if ($stale.Count -ne 0) { throw "forbidden runtime invocation:`n$($stale -join "`n")" }
+    $runtimePattern = '(^|[;&|()]|run:|command:|exec:|shell:)[[:space:]]*(env[[:space:]]+)?((sagekit|sage-kit)[[:space:]]+(run|validate|check|candidate|checkpoint|resource|packet)|python([0-9.]*)?[[:space:]]+-m[[:space:]]+(sagekit|sage_kit)|pip([0-9.]*)?[[:space:]]+install.*(sagekit|sage-kit)|npm[[:space:]]+(install|exec).*(sagekit|sage-kit)|npx[[:space:]]+(sagekit|sage-kit)|cargo[[:space:]]+install.*(sagekit|sage-kit)|go[[:space:]]+install.*(sagekit|sage-kit)|dotnet[[:space:]]+tool[[:space:]]+install.*(sagekit|sage-kit)|gem[[:space:]]+install.*(sagekit|sage-kit)|composer[[:space:]]+require.*(sagekit|sage-kit))'
+    $stale = @(git grep -n -I -E $runtimePattern -- $executionSurfaces)
+    if ($LASTEXITCODE -notin 0, 1) { throw 'shipped execution-surface scan failed' }
+    if ($stale.Count -ne 0) { throw "forbidden SAGE-Kit runtime invocation or executable dependency:`n$($stale -join "`n")" }
 }
 
 $skill = Get-Content -LiteralPath 'skills/sage-kit/SKILL.md' -Raw
@@ -76,40 +79,53 @@ foreach ($path in @('AGENTS.md', 'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.
 }
 
 foreach ($path in ($tracked | Where-Object { $_ -like '*.json' })) {
-    Get-Content -LiteralPath $path -Raw | ConvertFrom-Json | Out-Null
+    Get-Content -LiteralPath $path -Raw | ConvertFrom-Json -ErrorAction Stop | Out-Null
 }
 
-# Task Dispatch v2 is legacy static compatibility, not default routing. Verify
-# only that its policy binds the exact schema bytes it declares.
 $dispatchRoot = 'contracts/task-dispatch-v2'
-$dispatchPolicy = Get-Content -LiteralPath "$dispatchRoot/policy.json" -Raw | ConvertFrom-Json
-if ($dispatchPolicy.scope -ne 'legacy-static-compatibility' -or $dispatchPolicy.selection -ne 'explicit-only') { throw 'Task Dispatch v2 must remain explicit legacy compatibility' }
-$dispatchSchemas = @($dispatchPolicy.schema_files)
-if ($dispatchSchemas.Count -ne 2 -or $dispatchSchemas -notcontains 'task.schema.json' -or $dispatchSchemas -notcontains 'evidence.schema.json') { throw 'Task Dispatch v2 schema inventory is missing or malformed' }
+$dispatchPolicy = Get-Content -LiteralPath "$dispatchRoot/policy.json" -Raw | ConvertFrom-Json -ErrorAction Stop
+if ($dispatchPolicy -isnot [pscustomobject] -or $dispatchPolicy.selection_scope -ne 'legacy-static-compatibility' -or $dispatchPolicy.selection -ne 'explicit-only' -or $dispatchPolicy.fallback -ne 'forbidden' -or $dispatchPolicy.record_scope_field -ne 'validation_contract.record_scope') { throw 'Task Dispatch v2 selection and lifecycle scopes are malformed' }
+$dispatchSchemas = $dispatchPolicy.schema_files
+if ($dispatchSchemas -isnot [array] -or $dispatchSchemas.Count -ne 2 -or @($dispatchSchemas | Where-Object { $_ -isnot [string] }).Count -ne 0 -or (Compare-Object @('task.schema.json', 'evidence.schema.json') $dispatchSchemas).Count -ne 0) { throw 'Task Dispatch v2 schema inventory is missing or malformed' }
+$dispatchDigests = $dispatchPolicy.schema_sha256
+if ($dispatchDigests -isnot [pscustomobject] -or @($dispatchDigests.PSObject.Properties).Count -ne 2) { throw 'Task Dispatch v2 digest inventory is malformed' }
 foreach ($schemaName in $dispatchSchemas) {
+    $digestProperty = $dispatchDigests.PSObject.Properties[$schemaName]
+    if (-not $digestProperty -or $digestProperty.Value -isnot [string] -or $digestProperty.Value -notmatch '^[0-9a-fA-F]{64}$') { throw "Task Dispatch v2 digest is missing or malformed: $schemaName" }
     $schemaPath = "$dispatchRoot/$schemaName"
-    $digestProperty = $dispatchPolicy.schema_sha256.PSObject.Properties[$schemaName]
-    if (-not $digestProperty -or $digestProperty.Value -notmatch '^[0-9a-fA-F]{64}$') { throw "Task Dispatch v2 digest is missing or malformed: $schemaName" }
     if (-not (Test-Path -LiteralPath $schemaPath -PathType Leaf)) { throw "Task Dispatch v2 schema is missing: $schemaName" }
     $actual = (Get-FileHash -LiteralPath $schemaPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($actual -ne $digestProperty.Value.ToLowerInvariant()) { throw "Task Dispatch v2 digest mismatch: $schemaName" }
+    $dispatchSchema = Get-Content -LiteralPath $schemaPath -Raw | ConvertFrom-Json -ErrorAction Stop
+    if ($dispatchSchema -isnot [pscustomobject] -or $dispatchSchema.'$defs'.validationContract.properties.record_scope.const -ne 'active') { throw "Task Dispatch v2 record lifecycle scope is malformed: $schemaName" }
 }
 
-# Validate the active Graph manifest only. Legacy compatibility contracts are
-# readable inventory but are not part of default adoption.
 $graphManifestPath = 'contracts/graph/v1/contract.json'
-$graphManifest = Get-Content -LiteralPath $graphManifestPath -Raw | ConvertFrom-Json
-foreach ($entry in $graphManifest.resources.PSObject.Properties) {
+$graphManifest = Get-Content -LiteralPath $graphManifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+$expectedGraphResources = @{ graph_schema = 'graph.schema.json'; node_result_schema = 'node-result.schema.json' }
+if ($graphManifest -isnot [pscustomobject] -or $graphManifest.resources -isnot [pscustomobject] -or @($graphManifest.resources.PSObject.Properties).Count -ne $expectedGraphResources.Count) { throw 'Graph manifest resource inventory is malformed' }
+foreach ($entryName in $expectedGraphResources.Keys) {
+    $entry = $graphManifest.resources.PSObject.Properties[$entryName]
+    if (-not $entry -or $entry.Value -isnot [pscustomobject] -or $entry.Value.resource -isnot [string] -or $entry.Value.resource -ne $expectedGraphResources[$entryName] -or $entry.Value.canonical_sha256 -isnot [string] -or $entry.Value.canonical_sha256 -notmatch '^[0-9a-fA-F]{64}$') { throw "Graph manifest resource is malformed: $entryName" }
     $resourcePath = Join-Path (Split-Path -Parent $graphManifestPath) $entry.Value.resource
     if (-not (Test-Path -LiteralPath $resourcePath -PathType Leaf)) { throw "missing Graph manifest resource: $resourcePath" }
-    $declared = $entry.Value.canonical_sha256
     $actual = (Get-FileHash -LiteralPath $resourcePath -Algorithm SHA256).Hash.ToLowerInvariant()
-    if ($declared -ne $actual) { throw "Graph manifest digest mismatch: $resourcePath" }
+    if ($entry.Value.canonical_sha256.ToLowerInvariant() -ne $actual) { throw "Graph manifest digest mismatch: $resourcePath" }
 }
 
-# Validate only the small explicit canonical-authority pointer manifest, not
-# ordinary Markdown links. This is the single validation owner for
-# docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001.
+$releaseIds = @('license', 'readme_en', 'readme_zh_cn', 'migration_guide', 'release_guide', 'host_reference_codex', 'host_reference_claude', 'host_reference_opencode', 'host_reference_kimi', 'claude_agent_coder', 'claude_agent_final_review')
+$releaseEntries = @()
+foreach ($line in (Get-Content -LiteralPath 'contracts/release-resource-inventory.txt')) {
+    if ([string]::IsNullOrWhiteSpace($line) -or $line.TrimStart().StartsWith('#')) { continue }
+    $parts = $line -split '\|', 2
+    if ($parts.Count -ne 2 -or [string]::IsNullOrWhiteSpace($parts[0]) -or [string]::IsNullOrWhiteSpace($parts[1]) -or $parts[1] -match '(^|/)\.\.(/|$)') { throw "invalid release resource inventory entry: $line" }
+    $releaseEntries += [pscustomobject]@{ Id = $parts[0]; Path = $parts[1] }
+}
+if ($releaseEntries.Count -ne $releaseIds.Count -or (Compare-Object $releaseIds @($releaseEntries.Id)).Count -ne 0 -or (Compare-Object @($releaseEntries.Path | Sort-Object -Unique) @($releaseEntries.Path)).Count -ne 0) { throw 'release resource inventory is incomplete or duplicated' }
+foreach ($entry in $releaseEntries) {
+    if (-not (Test-Path -LiteralPath $entry.Path -PathType Leaf) -or $tracked -notcontains $entry.Path) { throw "missing tracked release resource: $($entry.Path)" }
+}
+
 $canonicalPointers = @(Get-Content -LiteralPath 'contracts/canonical-authority-pointers.txt' | Where-Object { $_.Trim() })
 if (($canonicalPointers | Sort-Object -Unique).Count -ne $canonicalPointers.Count) { throw 'duplicate canonical authority pointer' }
 $declaredPointers = @()
@@ -130,10 +146,10 @@ foreach ($reference in $canonicalPointers) {
 
 if ($env:SAGEKIT_DIFF_BASE) {
     git diff --check "$($env:SAGEKIT_DIFF_BASE)...HEAD"
-    if ($LASTEXITCODE -ne 0) { throw 'PR-range git diff --check failed' }
+    if ($LASTEXITCODE -ne 0) { throw 'PR/push-range git diff --check failed' }
 } else {
-    git diff --check
-    if ($LASTEXITCODE -ne 0) { Write-Warning 'local git diff --check reported hygiene issues (non-blocking without SAGEKIT_DIFF_BASE)' }
+    git diff HEAD --check
+    if ($LASTEXITCODE -ne 0) { throw 'local index/worktree git diff --check failed' }
 }
 
 Write-Output 'repository integrity: PASS'

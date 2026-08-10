@@ -6,16 +6,21 @@
 $raw = [Console]::In.ReadToEnd()
 if ([string]::IsNullOrWhiteSpace($env:SAGE_PROTECTED_PATHS)) { exit 0 }
 
-try { $data = $raw | ConvertFrom-Json } catch {
-    [Console]::Error.WriteLine('Advisory: malformed hook input; exact-path advisory not applied.')
-    exit 0
+function Reject-Envelope {
+    [Console]::Error.WriteLine('Advisory: invalid structured file_path envelope; configured exact-path advisory blocks.')
+    exit 2
 }
 
-$file = $data.tool_input.file_path
-if (-not ($file -is [string]) -or [string]::IsNullOrWhiteSpace($file)) {
-    [Console]::Error.WriteLine('Advisory: no structured file_path was available; exact-path advisory not applied.')
-    exit 0
+try { $data = $raw | ConvertFrom-Json } catch {
+    Reject-Envelope
 }
+
+if ($data -isnot [pscustomobject]) { Reject-Envelope }
+$toolInputProperty = $data.PSObject.Properties['tool_input']
+if ($null -eq $toolInputProperty -or $toolInputProperty.Value -isnot [pscustomobject]) { Reject-Envelope }
+$fileProperty = $toolInputProperty.Value.PSObject.Properties['file_path']
+if ($null -eq $fileProperty -or $fileProperty.Value -isnot [string] -or [string]::IsNullOrWhiteSpace($fileProperty.Value)) { Reject-Envelope }
+$file = $fileProperty.Value
 
 $base = $env:CLAUDE_PROJECT_DIR
 if (-not $base) { $base = (Get-Location).Path }

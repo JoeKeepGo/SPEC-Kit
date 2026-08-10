@@ -21,7 +21,8 @@ implementation and release.
 
 ## Capability Map Link
 
-- Capability map: `docs/CAPABILITY_MAP.md` or `N/A` with reason
+- Capability claims owner: `<active SPEC/acceptance criteria/project-selected capability map>`
+- Separate capability map: `<project-selected path or N/A with reason>`
 - Granularity audit status: `pending`, `pass`, `fail`, or `n/a`
 - Candidates not promoted:
 
@@ -45,7 +46,7 @@ Goal:
 
 Primary capability:
 
-- `<capability from docs/CAPABILITY_MAP.md, or direct primary capability with n/a reason>`
+- `<capability or compact claim from its project-selected owner>`
 
 Inputs:
 
