@@ -5,11 +5,12 @@ Adoption adds model routing, not a framework runtime.
 1. Preflight the host version, configuration, and documented automatic project
    instruction and Skill discovery mechanisms; confirm that the adopted entry
    can actually be observed for this project root.
-2. Install or reference SAGE-Kit once. Add the lightweight entry from
-   `docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md` to the project's existing
-   instruction surface instead of copying the complete Skill. Codex, Kimi Code
-   CLI, and OpenCode support project `AGENTS.md`; Claude Code uses `CLAUDE.md`
-   and can import `AGENTS.md`.
+2. Install or reference the complete SAGE-Kit Skill directory once. Add the
+   lightweight entry from the packaged
+   [`AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md`](framework/docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
+   to the project's existing instruction surface instead of copying the
+   complete Skill into the project. Codex, Kimi Code CLI, and OpenCode support
+   project `AGENTS.md`; Claude Code uses `CLAUDE.md` and can import `AGENTS.md`.
 3. Identify current project authority, active SPEC, tests, CI, acceptance
    owner, and any real permission or human gates.
 4. Let automatic project instructions carry Light work, including Light review

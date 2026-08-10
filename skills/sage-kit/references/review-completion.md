@@ -14,7 +14,7 @@ contracts, tests, security boundaries, and evidence. Return one bounded finding
 set.
 
 Evaluate capability and evidence claims through
-[`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md). Review
+[`CLAIM_EVIDENCE_TRUST.md`](framework/docs/agent/CLAIM_EVIDENCE_TRUST.md). Review
 only the affected boundary, and do not let descendants or nested workflows
 repeat the same review of an unchanged candidate.
 

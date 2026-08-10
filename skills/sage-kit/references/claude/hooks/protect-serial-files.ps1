@@ -22,10 +22,34 @@ $fileProperty = $toolInputProperty.Value.PSObject.Properties['file_path']
 if ($null -eq $fileProperty -or $fileProperty.Value -isnot [string] -or [string]::IsNullOrWhiteSpace($fileProperty.Value)) { Reject-Envelope }
 $file = $fileProperty.Value
 
+function Test-AbsolutePath([string]$path) {
+    if ([string]::IsNullOrWhiteSpace($path) -or $path -match "[`r`n]") { return $false }
+    if ([System.IO.Path]::DirectorySeparatorChar -eq '\') {
+        return $path -match '^[A-Za-z]:[\\/]' -or $path -match '^[\\/]{2}[^\\/]+[\\/][^\\/]+'
+    }
+    return $path.StartsWith('/')
+}
+
+$needsProjectRoot = -not (Test-AbsolutePath $file)
+foreach ($configured in ($env:SAGE_PROTECTED_PATHS -split "`r?`n")) {
+    if ([string]::IsNullOrWhiteSpace($configured)) { continue }
+    if (-not (Test-AbsolutePath $configured)) {
+        $needsProjectRoot = $true
+        break
+    }
+}
+
 $base = $env:CLAUDE_PROJECT_DIR
-if (-not $base) { $base = (Get-Location).Path }
+if ($needsProjectRoot -and (
+    -not (Test-AbsolutePath $base) -or
+    -not (Test-Path -LiteralPath $base -PathType Container)
+)) {
+    [Console]::Error.WriteLine('Advisory: relative protected-path decisions require an existing absolute CLAUDE_PROJECT_DIR; configured exact-path advisory blocks.')
+    exit 2
+}
+
 function Canon([string]$path) {
-    if (-not [System.IO.Path]::IsPathRooted($path)) { $path = Join-Path $base $path }
+    if (-not (Test-AbsolutePath $path)) { $path = Join-Path $base $path }
     return [System.IO.Path]::GetFullPath($path)
 }
 

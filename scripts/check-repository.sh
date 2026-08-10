@@ -11,7 +11,8 @@ for path in AGENTS.md README.md docs/SAGE_CORE.md docs/agent/AGENT_HARNESS.md \
   contracts/task-dispatch-v2/policy.json \
   contracts/task-dispatch-v2/task.schema.json \
   contracts/task-dispatch-v2/evidence.schema.json \
-  skills/sage-kit/SKILL.md skills/sage-kit/agents/openai.yaml; do
+  skills/sage-kit/SKILL.md skills/sage-kit/skill-manifest.json \
+  skills/sage-kit/agents/openai.yaml; do
   test -f "$path" || { printf 'missing required path: %s\n' "$path" >&2; exit 1; }
 done
 
@@ -226,7 +227,8 @@ license
 migration_guide
 readme_en
 readme_zh_cn
-release_guide'
+release_guide
+skill_manifest'
 actual_release_ids=''
 actual_release_paths=''
 while IFS= read -r line || [ -n "$line" ]; do

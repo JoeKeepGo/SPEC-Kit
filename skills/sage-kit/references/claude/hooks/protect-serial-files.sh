@@ -43,7 +43,34 @@ if ! file=$(extract_file_path); then
   exit 2
 fi
 
-base=${CLAUDE_PROJECT_DIR:-$PWD}
+is_absolute() {
+  case "$1" in
+    /*|[A-Za-z]:/*|[A-Za-z]:\\*|\\\\*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+needs_project_root=false
+is_absolute "$file" || needs_project_root=true
+old_ifs=$IFS
+IFS='
+'
+for configured in $SAGE_PROTECTED_PATHS; do
+  [ -n "$configured" ] || continue
+  if ! is_absolute "$configured"; then
+    needs_project_root=true
+    break
+  fi
+done
+IFS=$old_ifs
+
+base=${CLAUDE_PROJECT_DIR:-}
+if [ "$needs_project_root" = true ] &&
+   { [ -z "$base" ] || ! is_absolute "$base" || [ ! -d "$base" ]; }; then
+  warn 'relative protected-path decisions require an existing absolute CLAUDE_PROJECT_DIR; configured exact-path advisory blocks.'
+  exit 2
+fi
+
 canon() {
   printf '%s\n' "$1" | tr '\\' '/' | awk -v base="$base" '
     {

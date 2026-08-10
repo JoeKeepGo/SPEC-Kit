@@ -45,6 +45,20 @@ try {
     Check 'non-string file path blocks when configured' 2 (Invoke-Hook '{"tool_input":{"file_path":42}}' $tmp)
     Check 'wrong-type envelope blocks when configured' 2 (Invoke-Hook '{"tool_input":"docs/ACTIVE_CONTEXT.md"}' $tmp)
 
+    $env:CLAUDE_PROJECT_DIR = $null
+    Check 'missing project root blocks relative path decisions' 2 (Invoke-Hook '{"tool_input":{"file_path":"notes.txt"}}' $tmp)
+
+    $env:CLAUDE_PROJECT_DIR = 'relative\project'
+    Check 'relative project root blocks relative path decisions' 2 (Invoke-Hook '{"tool_input":{"file_path":"notes.txt"}}' $tmp)
+
+    $env:CLAUDE_PROJECT_DIR = Join-Path $tmp 'missing-project'
+    Check 'nonexistent project root blocks relative path decisions' 2 (Invoke-Hook '{"tool_input":{"file_path":"notes.txt"}}' $tmp)
+
+    $env:CLAUDE_PROJECT_DIR = $null
+    $env:SAGE_PROTECTED_PATHS = Join-Path $tmp 'docs\ACTIVE_CONTEXT.md'
+    $absoluteNotes = Join-Path $tmp 'notes.txt'
+    Check 'absolute-only decision does not require project root' 0 (Invoke-Hook ("{`"tool_input`":{`"file_path`":`"$($absoluteNotes.Replace('\', '\\'))`"}}") $tmp)
+
     $env:SAGE_PROTECTED_PATHS = $null
     Check 'unconfigured hook allows path' 0 (Invoke-Hook '{"tool_input":{"file_path":"docs/ACTIVE_CONTEXT.md"}}' $tmp)
 } finally {

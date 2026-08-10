@@ -47,6 +47,26 @@ check 'non-string file path blocks when configured' 2 $?
 printf '%s\n' '{"tool_input":"docs/ACTIVE_CONTEXT.md"}' | "$GUARD" >/dev/null 2>&1
 check 'wrong-type envelope blocks when configured' 2 $?
 
+unset CLAUDE_PROJECT_DIR
+printf '%s\n' '{"tool_input":{"file_path":"notes.txt"}}' | "$GUARD" >/dev/null 2>&1
+check 'missing project root blocks relative path decisions' 2 $?
+
+CLAUDE_PROJECT_DIR=relative/project
+export CLAUDE_PROJECT_DIR
+printf '%s\n' '{"tool_input":{"file_path":"notes.txt"}}' | "$GUARD" >/dev/null 2>&1
+check 'relative project root blocks relative path decisions' 2 $?
+
+CLAUDE_PROJECT_DIR="$TMP/missing-project"
+export CLAUDE_PROJECT_DIR
+printf '%s\n' '{"tool_input":{"file_path":"notes.txt"}}' | "$GUARD" >/dev/null 2>&1
+check 'nonexistent project root blocks relative path decisions' 2 $?
+
+unset CLAUDE_PROJECT_DIR
+SAGE_PROTECTED_PATHS="$TMP/docs/ACTIVE_CONTEXT.md"
+export SAGE_PROTECTED_PATHS
+printf '%s\n' "{\"tool_input\":{\"file_path\":\"$TMP/notes.txt\"}}" | "$GUARD" >/dev/null 2>&1
+check 'absolute-only decision does not require project root' 0 $?
+
 unset SAGE_PROTECTED_PATHS
 printf '%s\n' '{"tool_input":{"file_path":"docs/ACTIVE_CONTEXT.md"}}' | "$GUARD" >/dev/null 2>&1
 check 'unconfigured hook allows path' 0 $?
