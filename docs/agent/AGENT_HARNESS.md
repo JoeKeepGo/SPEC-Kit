@@ -24,9 +24,18 @@ default routing.
 ## Context Loading
 
 Load authority and capability metadata first, then only task-relevant SPEC,
-code, tests, and references. Use `ACTIVE_CONTEXT` for current handoff truth.
-Accepted history is not loaded or reconciled unless the task is an explicit
-historical audit.
+code, tests, and references. Use `ACTIVE_CONTEXT` for current handoff intent
+and its compact observed-facts snapshot. Reconcile only task-relevant copied
+machine facts with their direct Git, runtime, test, or artifact source; refresh
+a mismatch with `observed-at` and source identity. Accepted history is not
+loaded or reconciled unless the task is an explicit historical audit.
+
+Admit checks only to the realization depth and target fidelity required by the
+affected claims, following
+[`CLAIM_EVIDENCE_TRUST.md`](CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+A local implementation claim does not require a history scan, claim matrix, or
+E2E proof; composition, integration, delivery, or product-outcome proof is
+added only when the claim reaches that depth.
 
 ## Execution
 

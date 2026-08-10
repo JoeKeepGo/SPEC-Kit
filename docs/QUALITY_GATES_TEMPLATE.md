@@ -3,7 +3,9 @@
 Use this template to record project-owned gates. General completion is
 canonical at `docs/SAGE_CORE.md#sage-completion-001`; governance and severity
 are canonical at `docs/agent/GOVERNANCE_LEVELS.md`. This file selects local
-checks and evidence but does not invent product requirements.
+checks and evidence but does not invent product requirements. Claim/evidence
+trust is canonical at
+[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
 
 ## Universal Controls
 
@@ -13,7 +15,7 @@ Only these controls are universal:
 |---|---|
 | Authority | Current project authority and permission cover the action. |
 | Scope | Changed and inspected surfaces stay inside the authorized boundary. |
-| Truthful evidence | Results, omissions, limitations, and unavailable checks are reported accurately. |
+| Truthful claim/evidence | Results, omissions, limitations, and unavailable checks are accurate; evidence is current for affected claim inputs and asserts no greater realization depth or target fidelity than was checked. |
 | Required project checks | Checks named by current project authority pass or their named owner records a waiver. |
 | Credentials and host safety | Credentials are not exposed; host/tool safety boundaries are respected. |
 
@@ -38,7 +40,10 @@ Enable only profiles selected by project authority or concrete scope/risk:
 
 Browser visibility, data handling, redaction, and threat-model questions are
 optional prompts for the project owner. SAGE-Kit never turns them into a
-requirement, gate, or threat-model decision by itself.
+requirement, gate, or threat-model decision by itself. Product outcomes, GUI,
+security, browser, package/delivery, migration, and recovery checks are likewise
+admitted only when the project claim or gate requires them; no capability is
+automatically upgraded to E2E proof.
 
 ## Local Gate Table
 

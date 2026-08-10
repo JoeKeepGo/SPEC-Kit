@@ -40,9 +40,12 @@ provides.
 
 ## Product Requirements
 
-| ID | Requirement | Acceptance |
-|---|---|---|
-| `REQ-001` | `<requirement>` | `<acceptance evidence>` |
+Use the claim vocabulary from
+[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+
+| Claim ID | Requirement | Supported Entry | Observable Outcome | Delivery / Recovery (if claimed) | Required Evidence Depth / Fidelity |
+|---|---|---|---|---|---|
+| `CLAIM-001` | `<required capability>` | `<intended caller or trigger>` | `<acceptance-observable result>` | `<boundary or none claimed>` | `<depth / fidelity>` |
 
 ## Security And Privacy Boundaries
 

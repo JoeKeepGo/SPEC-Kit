@@ -6,15 +6,23 @@ The goal is trustworthy convergence with the least repeated work.
 <a id="sage-loop-006"></a>
 ## Verification Admission
 
+Apply the claim/evidence trust rules in
+[`CLAIM_EVIDENCE_TRUST.md`](CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+
 - During implementation, run only project-native focused checks for changed
   behavior.
-- At a lane boundary, verify only affected contracts and integrations.
+- Trace changed implementation, wiring, entry paths, targets, contracts, and
+  acceptance inputs to affected claims. Invalidate only evidence for those
+  claims, then verify only their affected contracts and integrations.
+- Reuse attributable evidence while its claim inputs, scope, relevant revision,
+  and target are unchanged.
+- Admit final product, package, or E2E proof only when a capability is first
+  established, relevant wiring, entry paths, or delivered artifacts changed,
+  an explicit product gate requires it, or release acceptance requires it.
+  Run admitted expensive proof once for the final unchanged candidate.
 - Run broad project CI once when required for the final unchanged candidate. A
-  corrective creates a successor candidate that may run CI again.
-- Reuse attributable evidence while its inputs, scope, and relevant code are
-  unchanged.
-- When a corrective changes one boundary, invalidate and re-run only that
-  boundary before the final CI decision.
+  successor receives replacement final proof only when its relevant inputs
+  changed; milestone count alone never adds runs.
 
 No framework-side candidate freeze, repository hashing, package build, process
 lease, verification counter, or checkpoint is required. Git commit identity,
@@ -54,8 +62,9 @@ unapproved scope expansion.
 
 Evidence states command or review, scope, relevant revision/diff, result, and
 limitations. It may be referenced rather than copied into every phase document.
-Historical evidence is not current evidence unless its inputs are unchanged and
-the current authority permits reuse.
+Historical acceptance remains an immutable event, not current trust. Historical
+evidence is current only after its inputs, scope, revision, and target are shown
+unchanged and current authority permits reuse.
 
 ## Host Resource Courtesy
 
