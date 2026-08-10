@@ -1,10 +1,14 @@
 # Approval Gates Template
 
 Approval semantics are canonical at `docs/SAGE_CORE.md#sage-auth-009`. This
-template instantiates project-owned gates, request inputs, and retained approval
-evidence for actions that require explicit human approval.
+template offers example rows for project-owned gates, request inputs, and
+retained approval evidence. A row becomes an active gate only when project
+authority instantiates it or a real host boundary requires it.
 
-## Default Closed Gates
+## Example Gate Catalog
+
+Delete inapplicable rows. Examples do not create product requirements,
+permissions, or approval boundaries.
 
 | Gate | Opens Only When | Required Evidence |
 |---|---|---|
@@ -31,4 +35,5 @@ When approval is required, ask for:
 - Apply the explicit, target-scoped boundary in
   `docs/SAGE_CORE.md#sage-auth-009` to every gate above.
 - Do not run real mutations when the phase says fake, dry, or simulation only.
-- Record approval evidence in the completion report.
+- Record approval evidence at the project-selected canonical owner; a
+  completion report may reference it when that report is selected.

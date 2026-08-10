@@ -8,8 +8,11 @@ capability/evidence planning.
 Preserve the path from product idea to executable work:
 
 1. clarify owner intent, users, boundaries, risks, and non-goals;
-2. produce blueprint, technical design, capability map, and roadmap at the
-   depth justified by product risk;
+2. produce a self-contained compact blueprint in the project profile, or an
+   equivalent project-selected section, covering product scope, user journeys,
+   system boundaries, interfaces/data/runtime, delivery, and acceptance;
+   create a separate technical design, capability map, or roadmap only when its
+   additional depth is useful for risk or execution;
 3. decompose outcomes only as far as useful, with acceptance, dependencies,
    evidence, and rollback details only for durable state/public contract,
    migration, or release changes;
@@ -23,6 +26,12 @@ Templates in `docs/templates/` are composable. Do not fill every template by
 default, copy framework rules into project documents, or turn physical document
 layout into execution identity. Planning findings may refine the current
 planning boundary but cannot silently start implementation.
+
+A capability map is optional support for broad discovery. The active SPEC or
+acceptance criteria may own compact claims and review references, and planning
+does not require exact file ownership before technical design. Preserve full
+milestone, wave, phase, and optional Graph depth when those structures add
+decision value.
 
 Use [`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md)
 for capability and evidence decisions instead of reproducing its model. Plans

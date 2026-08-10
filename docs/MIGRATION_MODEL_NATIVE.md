@@ -37,16 +37,19 @@ The model-native line no longer requires `$sage-kit` in every prompt:
 
 1. Install or reference the Skill once through the host's normal Skill
    mechanism.
-2. Add the lightweight project entry from
+2. Preflight the host version and configuration against its documented
+   automatic instruction and Skill-discovery behavior. Then add the lightweight
+   project entry from
    [`AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md`](templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
    using the host's documented automatic instruction file. Claude Code uses a
    `CLAUDE.md` project instruction and may import the `AGENTS.md` bootstrap.
-3. Let the project entry carry Light work. Permit implicit loading of the
-   complete Skill for Standard or Heavy work and for acceptance, review,
-   corrective, or release work.
-4. Keep explicit invocation as an override and diagnostic. Require it only
-   when the host supports neither automatic project instructions nor implicit
-   Skill invocation.
+3. Let the project entry carry Light work, including Light review and
+   mechanical corrective work. Load the complete Skill for materially semantic
+   review or corrective work, Standard or Heavy work, and all acceptance or
+   release work.
+4. Keep explicit invocation as an override and diagnostic. Require it as the
+   fallback whenever adoption, current authority, or required Skill content
+   cannot be observed or resolved after preflight.
 
 After activation, the first progress update reports the non-persistent
 `SAGE_ACTIVE` routing marker. It is not execution, safety, permission, or

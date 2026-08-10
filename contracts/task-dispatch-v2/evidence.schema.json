@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/sage-kit/task-dispatch/evidence.schema.json",
   "title": "SAGE-Kit Task Dispatch Evidence Record",
+  "description": "An explicitly selected legacy static evidence record. Verification evidence does not perform independent review, submit work, grant human acceptance, or close the task lifecycle.",
   "type": "object",
   "required": ["validation_contract", "task_id", "objective", "owner", "authority", "phase", "changed_surface", "runtime_shape", "levels", "artifacts", "skipped_checks", "runs", "blockers", "conclusion"],
   "properties": {
@@ -47,9 +48,9 @@
       "type": "object",
       "required": ["status", "highest_level", "review_result", "mock_used", "mock_rationale", "mock_scope", "mock_follow_up", "mock_accepted_by", "accepted_fallback", "accepted_fallback_by", "accepted_fallback_scope", "accepted_fallback_reason", "mock_acceptance_ref", "next_action"],
       "properties": {
-        "status": {"type": "string", "enum": ["PENDING", "VERIFIED", "PARTIAL", "ENV_BLOCKED", "CONTRACT_BLOCKED", "WORKER_BLOCKED", "PM_BLOCKED"]},
+        "status": {"type": "string", "enum": ["PENDING", "VERIFIED", "PARTIAL", "ENV_BLOCKED", "CONTRACT_BLOCKED", "WORKER_BLOCKED", "PM_BLOCKED"], "description": "Evidence conclusion only. VERIFIED means required verification is complete; it does not imply independent review, submission, human acceptance, or CLOSED lifecycle status."},
         "highest_level": {"enum": ["none", "L0", "L1", "L2", "L3", "L4"]},
-        "review_result": {"$ref": "#/$defs/reviewResult"},
+        "review_result": {"$ref": "#/$defs/reviewResult", "description": "Independent review result recorded separately from verification and human acceptance."},
         "mock_used": {"type": "boolean"},
         "mock_rationale": {"type": ["string", "null"]},
         "mock_scope": {"type": ["string", "null"]},
@@ -101,13 +102,14 @@
   "$defs": {
     "validationContract": {
       "type": "object",
-      "required": ["version", "policy_id", "policy_sha256", "scope"],
+      "required": ["version", "policy_id", "policy_sha256", "record_scope"],
       "properties": {
         "version": {"const": 2},
         "policy_id": {"const": "sagekit-task-dispatch-v2"},
         "policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "scope": {"const": "active"}
-      }
+        "record_scope": {"const": "active", "description": "Lifecycle scope of this evidence record only. It does not select or activate the legacy policy and does not permit fallback routing."}
+      },
+      "description": "Binds an active legacy record to an explicitly selected policy. Policy selection remains external and explicit-only."
     },
     "nonEmptyString": {"type": "string", "minLength": 1, "pattern": "\\S"},
     "stringArray": {"type": "array", "items": {"$ref": "#/$defs/nonEmptyString"}, "uniqueItems": true},
@@ -117,7 +119,7 @@
       "required": ["source", "grant", "scope"],
       "properties": {
         "source": {"$ref": "#/$defs/nonEmptyString"},
-        "grant": {"type": "string", "enum": ["READ_ONLY_REVIEW", "WRITE_AUTHORIZED", "CORRECTIVE_AUTHORIZED", "ENVIRONMENT_WRITE_AUTHORIZED", "SUBMIT_AUTHORIZED"]},
+        "grant": {"type": "string", "enum": ["READ_ONLY_REVIEW", "WRITE_AUTHORIZED", "CORRECTIVE_AUTHORIZED", "ENVIRONMENT_WRITE_AUTHORIZED", "SUBMIT_AUTHORIZED"], "description": "Externally granted permission for the bounded evidence task. Verification, review, submit, and acceptance permissions are not inferred from one another; SUBMIT_AUTHORIZED does not grant human acceptance."},
         "scope": {"$ref": "#/$defs/nonEmptyString"}
       }
     },

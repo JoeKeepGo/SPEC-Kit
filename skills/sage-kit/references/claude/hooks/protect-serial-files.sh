@@ -9,10 +9,38 @@ warn() { printf 'Advisory: %s\n' "$1" >&2; }
 
 [ -n "${SAGE_PROTECTED_PATHS:-}" ] || exit 0
 input=$(cat)
-file=$(printf '%s' "$input" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | sed -n '1p')
-if [ -z "$file" ]; then
-  warn 'no structured file_path was available; exact-path advisory not applied.'
-  exit 0
+
+extract_file_path() {
+  if command -v jq >/dev/null 2>&1; then
+    printf '%s' "$input" | jq -r '
+      if (type == "object") and
+         (.tool_input | type == "object") and
+         (.tool_input.file_path | type == "string" and test("\\S"))
+      then .tool_input.file_path
+      else error("expected tool_input.file_path string")
+      end
+    ' 2>/dev/null
+    return
+  fi
+
+  if command -v plutil >/dev/null 2>&1; then
+    input_file=$(mktemp "${TMPDIR:-/tmp}/sagekit-hook.XXXXXX") || return 1
+    trap 'rm -f "$input_file"' EXIT HUP INT TERM
+    printf '%s' "$input" > "$input_file"
+    plutil -lint "$input_file" >/dev/null 2>&1 || return 1
+    plutil -extract tool_input.file_path xml1 -o - "$input_file" 2>/dev/null |
+      grep -Eq '<string>[^<]*</string>' || return 1
+    file=$(plutil -extract tool_input.file_path raw -o - "$input_file" 2>/dev/null) || return 1
+    case "$file" in *[![:space:]]*) printf '%s\n' "$file" ;; *) return 1 ;; esac
+    return
+  fi
+
+  return 1
+}
+
+if ! file=$(extract_file_path); then
+  warn 'invalid structured file_path envelope; configured exact-path advisory blocks.'
+  exit 2
 fi
 
 base=${CLAUDE_PROJECT_DIR:-$PWD}

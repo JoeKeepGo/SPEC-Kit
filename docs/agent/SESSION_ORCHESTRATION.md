@@ -7,7 +7,9 @@ project-granted scope. The controller does not own or widen project scope.
 
 Each worker receives objective, authority, permission, paths, acceptance,
 checks, stop conditions, and return shape. Add governance, Graph, specialist,
-or host blocks only when applicable. Shared current truth stays with the named
+or host blocks only when applicable. The active SPEC and project authority own
+the normative objective, intent, and acceptance criteria. Compact coordination
+status, findings, blockers, next action, and references stay with the named
 `ACTIVE_CONTEXT` owner.
 
 ## Parallelism
@@ -24,9 +26,13 @@ serializes push and merge.
 Implementation, review, corrective work, submit, and human acceptance remain
 separate grants. Mechanical wording, status, or EOF fixes close with a focused
 check. Semantic corrective work receives one targeted independent re-review of
-the affected boundary. Continue inside the same authorized scope while findings
-decrease; after two consecutive no-progress rounds for one root cause return
-`BLOCKED`.
+the already reviewed affected boundary; this remains sufficient when semantic
+changes stay inside that boundary. Full review is reserved for permission or
+source-authority changes, or broad cross-boundary changes. Continue inside the
+same authorized scope while findings decrease. After two consecutive
+no-progress rounds for one root cause, reassess strategy and produce a
+diagnostic handoff. Report `BLOCKED` only when the diagnosis establishes a
+genuine authority, permission, required-input, or required-evidence gap.
 
 ## Bounded Multi-Milestone Continuation
 
@@ -49,7 +55,10 @@ it never creates acceptance or admits new scope.
 
 ## Handoff
 
-Write current objective/status/findings/blockers/next action only to the
-project-owned `ACTIVE_CONTEXT`. A handoff is a bounded transfer view containing
-authority, evidence, changed surfaces, next owner, and the `ACTIVE_CONTEXT`
-reference. It is not a second current-state record.
+Write current coordination status, findings, blockers, next action, and
+authority/evidence references only to the project-owned `ACTIVE_CONTEXT`; keep
+normative objective, intent, and acceptance in the active SPEC or project
+authority. A handoff is a bounded transfer view containing authority, evidence,
+changed surfaces, next owner, and the `ACTIVE_CONTEXT` reference. It is not a
+second current-state record. A read-only actor returns a bounded proposed
+update to the named owner instead of writing `ACTIVE_CONTEXT` directly.

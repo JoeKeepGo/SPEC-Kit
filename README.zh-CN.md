@@ -37,10 +37,11 @@ Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常�
 2. 使用 [`AGENTS.md` bootstrap 模板](docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
    添加轻量项目入口，并指向当前项目 authority。Claude Code 项目使用导入该
    bootstrap 的 `CLAUDE.md`；具体见宿主 reference。
-3. Light 工作由自动项目指令携带 kernel；Standard/Heavy 以及 acceptance、review、
-   corrective、release 工作隐式加载一次完整 Skill。
-4. 显式 `$sage-kit` 用于覆盖或诊断路由；只有宿主同时缺少自动项目指令和隐式 Skill
-   调用时，它才是必需 fallback。
+3. Light 工作（包括 Light review 与机械式 corrective）由自动项目指令携带 kernel；
+   Standard/Heavy、实质语义 review/corrective、acceptance 与 release 在每个 controller
+   context 加载一次完整 Skill。
+4. 当 adoption、当前 authority 或所需 Skill 内容无法解析时，使用显式 `$sage-kit`
+   覆盖或诊断路由。
 5. 实现期间使用项目原生 focused checks；只有项目、merge、release 或 acceptance
    gate 要求时才运行最终 CI。
 
@@ -53,7 +54,7 @@ Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常�
 | 等级 | 适用工作 | 常见结构 |
 |---|---|---|
 | Light | 小型、低风险、边界明确的修改 | 0-1 个文档，controller 可执行，默认无独立 review，1-2 个 focused checks；只有项目/merge/release gate 要求时运行 CI |
-| Standard | 普通多文件产品工作 | 短 plan + result，按风险使用 controller/subagents，一次 affected review，focused checks 与每个未变候选所需的 CI |
+| Standard | 普通多文件产品工作 | 短 plan + result，按风险使用 controller/subagents，一次 affected review，focused checks，以及仅在项目 authority、acceptance 或 merge/release gate 要求时对每个未变候选运行一次项目 CI |
 | Heavy | 具体安全、权限、生产、发布、破坏性或广泛集成风险 | 默认 3-5 个有目的文档，一次独立 final review，risk checks + 仅在项目明确选择时执行 final CI，显式高风险人工 gates |
 
 治理等级与权限彼此独立。Heavy controller 不会自动获得写入、corrective、submit
@@ -61,10 +62,11 @@ Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常�
 
 ## 权威边界
 
-- 项目拥有产品需求、threat model、范围、权限、gates、tests 与 acceptance。
-- Git、runtime、checks、reviews 与 artifacts 拥有各自直接观测的事实；项目文档拥有
-  intent 与 decisions。`ACTIVE_CONTEXT` 是紧凑 handoff snapshot，不是第二个机器事实
-  来源。
+- active SPEC 与项目 authority 拥有规范性 objective、产品 intent、acceptance criteria
+  和 acceptance decision。
+- Git、runtime、checks、reviews 与 artifacts 拥有各自直接观测的事实；
+  `ACTIVE_CONTEXT` 只拥有紧凑的 status/findings/blockers/next-action snapshot 及其
+  references，不拥有 intent，也不是第二个机器事实来源。
 - capability realization 与 evidence trust 统一由
   [`CLAIM_EVIDENCE_TRUST.md`](docs/agent/CLAIM_EVIDENCE_TRUST.md) 管理；其他表面只链接，
   不复制模型全文。
@@ -75,9 +77,9 @@ Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常�
 
 ## 支持的宿主
 
-Skill 包含 Codex、Claude Code、OpenCode 和 Kimi 指导。Codex、Kimi Code CLI 与
-OpenCode 支持项目 `AGENTS.md`；Claude Code 使用 `CLAUDE.md`，并可导入该 bootstrap。
-这些项目指令和隐式 Skill 路由用于指导模型，不构成 hard enforcement。SAGE-Kit 可与
+Skill 包含 Codex、Claude Code、OpenCode 和 Kimi 指导。项目指令与 Skill 路由是预期
+宿主能力，应根据已采用的宿主版本和配置确认；它们用于指导模型，不构成 hard
+enforcement。SAGE-Kit 可与
 specialist Skills、plugins、MCP、原生 subagents 及项目自动化共存；所有能力仍受项目
 authority 约束，不得静默扩张范围。
 
@@ -90,11 +92,12 @@ release 必须停止。只有项目 authority 明确允许时，`DONE_PENDING_AC
 ## 验证经济性
 
 ```text
-每次修改        -> 项目原生 focused check
-受影响边界      -> affected-only review 或 verification
-输入未变化      -> 复用可归因 evidence
-最终候选        -> 每个未变候选运行一次所需项目 CI
-finding 已修复  -> targeted re-review，不重放 full review
+每次修改       -> 项目原生 focused check
+受影响边界     -> affected-only review 或 verification
+输入未变化     -> 复用可归因 evidence
+相关输入变化   -> 重跑受影响的 product/package/E2E proof
+最终候选       -> 每个未变候选运行一次所需项目 CI
+finding 已修复 -> targeted re-review，不重放 full review
 ```
 
 当 finding 持续收敛且范围不扩张时可以自动继续；在同一既有 corrective authority

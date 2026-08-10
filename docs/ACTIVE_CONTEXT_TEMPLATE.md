@@ -2,15 +2,16 @@
 
 Updated: `<RFC3339 timestamp>`
 
-This owns the compact coordination snapshot and normative intent: objective,
-status, findings, blockers, and next action. It does not own underlying machine
-facts. Follow
+This owns only the compact coordination snapshot: status, findings, blockers,
+next action, and authority/evidence references. The active SPEC and project
+authority own the normative objective, intent, and acceptance criteria. This
+file does not own underlying machine facts. Follow
 [`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001) and
 replace changed facts rather than appending a diary.
 
-## Normative Intent And Coordination
+## Coordination And References
 
-- Objective:
+- Objective / intent / acceptance authority reference:
 - Status:
 - Active SPEC:
 - Governance / permission:
@@ -51,3 +52,6 @@ contradictory snapshot. Refresh only the affected copied facts and claims.
 Ledgers index immutable events/evidence and handoffs provide bounded transfer
 views; neither may maintain a competing current status. Do not copy framework
 rules, full logs, private reasoning, or accepted history here.
+
+A read-only actor does not refresh this file directly; it returns a bounded
+proposed update to the named owner.

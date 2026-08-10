@@ -29,11 +29,23 @@ check 'exact configured canonical path blocked' 2 $?
 printf '%s\n' '{"tool_input":{"file_path":"elsewhere/docs/ACTIVE_CONTEXT.md"}}' | "$GUARD" >/dev/null 2>&1
 check 'same filename outside configured path allowed' 0 $?
 
-printf '%s\n' '{"tool_input":{"command":"echo x >> docs/ACTIVE_CONTEXT.md"}}' | "$GUARD" >/dev/null 2>&1
+printf '%s\n' '{"tool_input":{"file_path":"notes.txt","command":"echo x >> docs/ACTIVE_CONTEXT.md"}}' | "$GUARD" >/dev/null 2>&1
 check 'shell text is not heuristically inspected' 0 $?
 
 printf '%s\n' 'not json' | "$GUARD" >/dev/null 2>&1
-check 'unsupported event shape remains advisory' 0 $?
+check 'malformed envelope blocks when configured' 2 $?
+
+printf '%s\n' '{"tool_input":{"file_path":"notes.txt"}} trailing text' | "$GUARD" >/dev/null 2>&1
+check 'malformed file path token blocks when configured' 2 $?
+
+printf '%s\n' '{"tool_input":{}}' | "$GUARD" >/dev/null 2>&1
+check 'missing file path blocks when configured' 2 $?
+
+printf '%s\n' '{"tool_input":{"file_path":42}}' | "$GUARD" >/dev/null 2>&1
+check 'non-string file path blocks when configured' 2 $?
+
+printf '%s\n' '{"tool_input":"docs/ACTIVE_CONTEXT.md"}' | "$GUARD" >/dev/null 2>&1
+check 'wrong-type envelope blocks when configured' 2 $?
 
 unset SAGE_PROTECTED_PATHS
 printf '%s\n' '{"tool_input":{"file_path":"docs/ACTIVE_CONTEXT.md"}}' | "$GUARD" >/dev/null 2>&1

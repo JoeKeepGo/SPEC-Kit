@@ -18,14 +18,16 @@ Standard or Heavy execution; load it once for the active task.
   workflow bundles.
 - Record evidence by reference instead of copying logs through every document.
 - Do not run broad checks repeatedly. Each unchanged final candidate receives
-  project CI only when required; a corrective successor may run it again.
+  project CI once only when project authority, acceptance, or a merge/release
+  gate requires it; a corrective successor may run it again.
 - Match capability claims to the evidence admitted by
   [`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md).
   Do not multiply proof by milestone count or infer delivery from local output.
 
 Continue correctives without new approval while findings decrease and scope
 stays fixed. Two consecutive no-progress rounds on the same root cause return
-`BLOCKED`. Otherwise report a blocker only when a real authority, permission,
-required-input, or required-evidence gap prevents safe progress.
+strategy reassessment and a diagnostic handoff. Report `BLOCKED` only when a
+genuine authority, permission, required-input, or required-evidence gap
+prevents safe progress.
 Authority, security, destructive, credential, acceptance, merge, and release
 decisions stop unless explicitly granted.

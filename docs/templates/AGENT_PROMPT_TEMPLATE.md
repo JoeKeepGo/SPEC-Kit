@@ -26,7 +26,8 @@ Checks:
 
 Stop:
 - authority/scope/permission expansion, safety or approval decision, missing
-  required evidence, destructive/production/merge/release gate
+  required input/evidence, destructive/production/merge/release gate; report
+  `BLOCKED` only when the gap genuinely prevents safe progress
 
 Return:
 - changed surfaces, evidence references, review/concerns, blocker or next owner,

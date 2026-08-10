@@ -20,6 +20,11 @@ Lower layers cannot infer, widen, waive, or replace higher authority. Governance
 level and permission are independent. Review, corrective, submit, waiver, and
 acceptance authority remain separate grants.
 
+The active SPEC and project-owned current authority own the normative objective,
+acceptance criteria and decision, and project intent. A check owner runs or
+reports a check; only the named human waiver authority may waive it; the named
+human acceptance owner makes the separate acceptance decision.
+
 ## Product Lifecycle
 
 SAGE-Kit preserves the complete path from idea to accepted product:
@@ -38,10 +43,13 @@ migration, or release is changed.
 
 ## Current Truth And History
 
-The active SPEC defines current work. A compact `ACTIVE_CONTEXT` records only
-current objective, status, findings, blockers, and next action, together with
-the authority and evidence references needed to resume. It is the exclusive
-owner of those current facts. Historical ledgers are immutable event/evidence
+The active SPEC and project-owned current authority define the normative
+objective, acceptance, and intent. A compact `ACTIVE_CONTEXT` owns the current
+coordination snapshot: status, findings, blockers, next action, and the
+authority and evidence references needed to resume. It does not own normative
+intent or the underlying machine observations. Refreshing it requires ownership
+of its project-selected path and write permission; a read-only actor returns a
+bounded proposed update instead. Historical ledgers are immutable event/evidence
 indexes; handoffs are bounded transfer views. Neither becomes executable
 authority merely because it exists.
 
@@ -70,14 +78,16 @@ Evidence cannot outrun its claim: it supports only the realization depth and
 target fidelity actually checked.
 
 Completion is eligible only when the authorized scope is finished, applicable
-project-required checks pass or are explicitly waived by their owner, evidence
-is truthful, and no blocking finding or approval gate remains. Mechanical
-wording, status, or EOF fixes close with a direct focused check; a semantic
+project-required checks pass or are explicitly waived by the named human waiver
+authority, evidence is truthful, and no blocking finding or approval gate
+remains. Mechanical wording, status, or EOF fixes close with a direct focused
+check; a semantic
 corrective receives one targeted re-review of the affected boundary.
 
-Implementation completion, review verdict, submit authorization, and human
-acceptance are separate events. A framework or agent may recommend acceptance;
-only the project-named acceptance owner may accept the product outcome.
+Implementation completion, check result, review verdict, waiver, submit
+authorization, and human acceptance are separate events and roles. A framework
+or agent may recommend acceptance; only the project-named human acceptance owner
+may record the acceptance decision.
 
 The table below is only a completion/acceptance projection of existing
 cross-layer statuses. It is not a state machine and does not replace the Graph

@@ -147,26 +147,24 @@ One fact has one owner:
 
 | Fact class | Canonical owner |
 |---|---|
-| Objective, normative authority, permission, acceptance criteria or decision, and next intent | The project-owned current authority and planning documents |
+| Normative objective, authority, permission, acceptance criteria or decision, and project intent | The active SPEC and project-owned current authority/planning documents |
 | Stable project-level claim definitions: Claim ID, supported entry, observable outcome, delivery/recovery scope, and required depth/fidelity | The project's capability map instantiated from `docs/templates/CAPABILITY_MAP_TEMPLATE.md` |
 | Branch, `HEAD`, and dirty state | Git at observation time |
 | Runtime identity, version, configuration, and process state | The observed runtime at observation time |
 | Test, review, or check result | The producing test system, review record, or command output for its bound inputs |
 | Artifact identity, contents, manifest, and build receipt | The observed artifact and its producing system |
 
-`ACTIVE_CONTEXT` is a compact routing and handoff snapshot. Every copied
+`ACTIVE_CONTEXT` owns only the compact coordination snapshot: current status,
+findings, blockers, next action, and authority/evidence references. Every copied
 machine fact must carry an `observed-at` time and enough source identity to
-refresh it. The snapshot cannot override Git, a runtime, a test result, or an
-artifact. Project documents remain authoritative for intent and decisions;
-machines remain authoritative for facts they expose.
+refresh it. The snapshot cannot override the active SPEC, project authority,
+Git, a runtime, a test result, or an artifact.
 
-Accordingly, older references to `ACTIVE_CONTEXT` as the exclusive owner of
-current facts mean that it owns the durable snapshot, not the underlying
-machine observations.
-
-On mismatch, refresh or correct the snapshot directly. Block only an
-acceptance or submit node whose decision depends on the incorrect fact. Do not
-expand the mismatch into a full review of unrelated claims, history, or work.
+On mismatch, the owner of the project-selected `ACTIVE_CONTEXT` path may refresh
+or correct it only with write permission. A read-only actor returns a bounded
+proposed update to that owner. Block only an acceptance or submit node whose
+decision depends on the incorrect fact. Do not expand the mismatch into a full
+review of unrelated claims, history, or work.
 
 ## Lightweight Kernel And Proof Admission
 
@@ -195,7 +193,8 @@ both conditions hold:
 
    - that required proof class is being established for the claim for the
      first time;
-   - relevant wiring, entry paths, or delivered artifacts changed;
+   - any relevant claim input changed, including implementation, wiring, entry
+     path, target, contract, acceptance input, or delivered artifact;
    - an explicit product gate requires it; or
    - release acceptance requires it.
 
@@ -241,12 +240,16 @@ SAGE-Kit adoption must not depend on the user writing `$sage-kit` in every
 prompt. This replaces explicit-only activation guidance. Explicit invocation
 remains an override and diagnostic path.
 
-- A Codex project `AGENTS.md`, or the equivalent automatic project-instruction
-  entry for another host, loads the lightweight kernel for project work.
+- An adopted Codex project `AGENTS.md`, or equivalent host project-instruction
+  entry, is expected to load the lightweight kernel when adoption preflight and
+  current host version/configuration evidence confirm that behavior.
 - The complete Skill permits implicit invocation for Standard or Heavy work,
-  and for acceptance, review, corrective, or release work.
-- Light work uses only the project kernel and must not implicitly load the
-  complete Skill unless the user explicitly overrides that route.
+  materially semantic review or corrective work, and all acceptance or release
+  work, once per controller context. It may reload after compaction or resume
+  when the prior content is no longer observable.
+- Light work, including Light review and mechanical wording/status/EOF
+  corrective work, uses only the project kernel unless the user explicitly
+  overrides that route.
 - The first progress update after activation emits one non-persistent marker:
 
   ```text
@@ -254,13 +257,17 @@ remains an override and diagnostic path.
   ```
 
 - The marker reports routing. It is not a safety, containment, permission, or
-  compliance proof. Host-loaded automatic project instructions are the
-  foundation of activation.
-- A host requires explicit invocation only when it supports neither automatic
-  project instructions nor implicit Skill invocation.
+  compliance proof and is not handoff content.
+- Automatic project instructions and implicit Skill selection are expected host
+  capabilities only when adoption preflight and current host version/configuration
+  evidence establish them; they are not unconditional guarantees.
+- Explicit invocation is the required fallback whenever adoption, current
+  authority, or required Skill content cannot be observed or resolved through
+  those routes.
 
 The marker is conversational state only. Do not write it to project memory,
-receipts, ledgers, or runtime state.
+receipts, ledgers, runtime state, or handoffs. A handoff carries only the compact
+authority boundary and selected profile identity needed by its recipient.
 
 ## Hard Cost Ceilings
 

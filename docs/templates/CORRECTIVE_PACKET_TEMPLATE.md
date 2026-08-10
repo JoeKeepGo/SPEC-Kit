@@ -23,6 +23,8 @@ ordinary P2 may be fixed directly or retained as a concern. P3 never blocks.
 
 Continue without new Project Manager approval while findings decrease inside
 the same authorized scope. At two consecutive no-progress rounds for the same
-root cause return `BLOCKED`. Stop earlier for scope/permission expansion, a new
-threat-model or safety decision, destructive/production work, credentials, or
-merge/release gates.
+root cause, trigger strategy reassessment and a diagnostic handoff. Report
+`BLOCKED` only when a genuine authority, permission, required-input, or
+required-evidence gap prevents safe progress. Stop immediately for
+scope/permission expansion, a new threat-model or safety decision,
+destructive/production work, credentials, or merge/release gates.

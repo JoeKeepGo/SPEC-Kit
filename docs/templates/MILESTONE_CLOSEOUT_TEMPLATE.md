@@ -8,8 +8,8 @@ accepted/closed outcome and does not decide completion or acceptance.
 
 Waiver meaning is canonical at
 `docs/agent/GOVERNANCE_LEVELS.md#sage-auth-008`. This closeout retains the
-project-instance Finding Owner, Waiver Authority, decision/delegation, and
-human-authority evidence fields.
+project-instance Check Owner, named human Waiver Authority, named human
+Acceptance Owner, and separate acceptance decision fields.
 
 This file is a historical outcome index, not startup context. Keep it concise
 enough to answer what happened, what shipped, what remains, and where to find
@@ -27,7 +27,8 @@ command output.
 - Owner: `<owner>`
 - Final Review verdict/ref:
 - Corrective convergence status/ref:
-- Project Manager/project-owner decision/ref:
+- Acceptance Owner: `<named human>`
+- Acceptance decision/ref: `<accepted, rejected, or not requested + ref>`
 - Change refs: `<commit, PR, changelist, release, or n/a>`
 
 Record no `HANDOFF` closeout. Use `CLOSED_BLOCKED`, `DEFERRED`, or `ABANDONED`
@@ -65,9 +66,9 @@ only after the canonical closeout sequence produces that authorized decision.
 
 ## Approval Gates
 
-| Gate | Final Status | Evidence | Finding Owner | Waiver Authority | Decision Or Delegation Ref | Notes |
-|---|---|---|---|---|---|---|
-| `<gate>` | `PASS`, `WAIVED`, `BLOCKED`, or `N/A` | `<source>` | `<owner or n/a>` | `<authority or n/a>` | `<explicit decision/delegation ref or n/a>` | `<notes>` |
+| Gate | Final Status | Evidence | Check Owner | Waiver Authority | Waiver Decision Ref | Acceptance Owner | Acceptance Decision Ref | Notes |
+|---|---|---|---|---|---|---|---|---|
+| `<gate>` | `PASS`, `WAIVED`, `BLOCKED`, or `N/A` | `<source>` | `<owner or n/a>` | `<named human or n/a>` | `<explicit waiver ref or n/a>` | `<named human or n/a>` | `<explicit acceptance ref or pending/n/a>` | `<notes>` |
 
 Complete these local fields under
 `docs/agent/GOVERNANCE_LEVELS.md#sage-auth-008`.

@@ -33,13 +33,13 @@ Before broad exploration, state:
 
 | Memory Type | Location |
 |---|---|
-| Current repository state | Project-selected current-truth authority path |
+| Current Git/repository state | Canonical Git or project tool observation; optionally referenced from the current-context record |
 | Current objective/status/findings/blockers/next action | Project-selected current-truth authority path |
-| Immutable milestone history/evidence index | `docs/M<ID>/MILESTONE_LEDGER.md` when selected |
-| Milestone outcome | `docs/M<ID>/MILESTONE_CLOSEOUT.md` |
-| Phase scope and evidence | `docs/M<ID>/<phase>.md` |
-| Review decision | Review report or phase completion report |
-| Bounded transfer view | Final handoff, referencing `ACTIVE_CONTEXT` |
+| Immutable milestone history/evidence index | Project-selected ledger path, when selected |
+| Milestone outcome | Project-selected closeout or decision record |
+| Phase scope and evidence | Project-selected phase authority/evidence record, when phases are selected |
+| Review decision | Project-selected review record or canonical review system |
+| Bounded transfer view | Project-selected handoff, referencing the current-context record |
 
 Historical closeouts are compressed indexes. They are not startup context. Read
 them before opening historical ledgers or phase docs when prior milestone
@@ -61,7 +61,7 @@ For the project-selected current-truth authority path:
 - keep evidence and historical detail in ledgers, phase docs, completion
   reports, closeouts, or handoffs.
 
-For `docs/DOC_ROUTING.md`:
+For the project-selected document-routing record:
 
 - update only when document locations, task routing, ownership boundaries, or
   archive policy changed;

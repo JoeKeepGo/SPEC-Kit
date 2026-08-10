@@ -7,8 +7,9 @@ scope, permission, gate, or current state.
 <a id="execution-loop"></a>
 ## Bounded Loop
 
-1. Read objective, authority, permission, paths, acceptance, checks, stop, and
-   return requirements.
+1. Read the normative objective, acceptance, and intent from the active SPEC
+   and project authority, plus permission, paths, checks, stop, and return
+   requirements.
 2. Select Light/Standard/Heavy from the canonical matrix; unknown identity or
    delegation alone does not select Strict/Heavy.
 3. Use one loop by default; add Graph, waves, lanes, or specialists only when
@@ -16,9 +17,10 @@ scope, permission, gate, or current state.
 4. Implement the narrowest change and run focused/project-required checks.
 5. Close mechanical wording/status/EOF fixes with a focused check; give a
    semantic corrective one targeted re-review.
-6. Update `ACTIVE_CONTEXT` only when durable current truth changed and authority
-   permits; otherwise return a bounded proposal. Append a ledger event only
-   when that optional immutable history profile is selected.
+6. Update `ACTIVE_CONTEXT` status/findings/blockers/next action and references
+   only when its project-selected owner permits the refresh and write permission
+   exists; a read-only actor returns a bounded proposal. Append a ledger event
+   only when that optional immutable history profile is selected.
 7. Return evidence, concerns, blockers, and next owner without creating product
    acceptance.
 

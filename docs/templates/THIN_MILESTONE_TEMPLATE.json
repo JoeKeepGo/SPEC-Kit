@@ -1,29 +1,14 @@
 {
   "schema_version": 2,
   "document_model": "thin-model-native",
-  "milestone_id": "M1",
-  "objective": "<observable product outcome>",
-  "authority_references": [
-    "docs/ACTIVE_SPEC.md",
-    "docs/APPROVAL_GATES.md"
-  ],
-  "dependency_dag": {
-    "P1": [],
-    "P2": [
-      "P1"
-    ]
-  },
-  "phase_ids": [
-    "P1",
-    "P2"
-  ],
-  "acceptance_criteria": [
-    "<project-owned criterion>"
-  ],
-  "invariants": [
-    "<product or safety invariant>"
-  ],
-  "rollback": "<rollback or not-applicable reason>",
-  "state": "planned",
+  "milestone_id": null,
+  "objective": null,
+  "authority_references": [],
+  "dependency_dag": null,
+  "phase_ids": [],
+  "acceptance_criteria": [],
+  "invariants": [],
+  "rollback": null,
+  "state": null,
   "evidence_references": []
 }

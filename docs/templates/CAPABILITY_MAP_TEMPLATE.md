@@ -1,12 +1,13 @@
 # Capability Map
 
-Use this file before creating an executable milestone roadmap, especially when
-the project starts from a broad idea or non-technical intake.
+Use this optional file when broad discovery, claim stability, or roadmap
+decomposition needs a project-level view. Do not require it before an
+executable roadmap when the active SPEC or acceptance criteria already own
+sufficient compact claims and review references.
 
-This template is the canonical project-level claim catalog owner. A project
-instantiates one capability map and maintains each stable Claim ID, supported
-entry, observable outcome, delivery/recovery scope, and required evidence
-depth/fidelity there.
+When project authority selects this template as the canonical project-level
+claim catalog, maintain each stable Claim ID, supported entry, observable
+outcome, delivery/recovery scope, and required evidence depth/fidelity here.
 
 The capability map also prevents broad epics from being mislabeled as
 milestones. Use the claim vocabulary from
@@ -52,7 +53,7 @@ Mark `FAIL` when any candidate milestone:
   explicit reason;
 - mixes work that cannot share a coherent acceptance decision;
 - cannot be reviewed without unrelated history;
-- cannot name file ownership;
+- cannot name a bounded ownership or contract surface by execution admission;
 - cannot name its supported entry or applicable composition/wiring; or
 - cannot name the required evidence depth/fidelity when that distinction
   affects acceptance.
@@ -63,7 +64,7 @@ Mark `FAIL` when any candidate milestone:
 
 ## Roadmap Promotion
 
-Promote only `PASS` candidates into `docs/MILESTONE_ROADMAP.md`.
+Promote only `PASS` candidates into the project-selected roadmap.
 
 Failed candidates stay in planning until they are reshaped into independently
 acceptable, verifiable, and bounded product outcomes. A cohesive vertical
