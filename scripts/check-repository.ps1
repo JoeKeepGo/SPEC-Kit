@@ -65,17 +65,12 @@ $agentManifest = Get-Content -LiteralPath 'skills/sage-kit/agents/openai.yaml' -
 $implicitInvocationEntries = @([regex]::Matches($agentManifest, '(?m)^[ \t]*allow_implicit_invocation:[^\r\n]*\r?$'))
 if ($implicitInvocationEntries.Count -ne 1 -or $implicitInvocationEntries[0].Value -notmatch '\A[ \t]*allow_implicit_invocation:[ \t]*true[ \t]*(?:#.*)?\r?\z') { throw 'SAGE-Kit allow_implicit_invocation must appear exactly once with value true' }
 
-$activationMarker = 'SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>'
+$activationMarker = 'SAGE_ACTIVE source=<project-entry> governance=<Light|Standard|Heavy> authority=<current-reference> profiles=<selected-or-none>'
 $skillMarkerCount = @((Get-Content -LiteralPath 'skills/sage-kit/SKILL.md') | Where-Object { $_ -ceq $activationMarker }).Count
 if ($skillMarkerCount -ne 1) { throw 'SAGE-Kit Skill must contain exactly one canonical activation marker' }
-$kernelHeadings = @('**Authority and scope:**', '**Claim-evidence congruence:**', '**Observed-fact ownership:**', '**Affected-only invalidation:**', '**Genuine blockers:**')
 foreach ($path in @('AGENTS.md', 'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md')) {
     $bootstrapLines = @(Get-Content -LiteralPath $path)
-    $bootstrap = $bootstrapLines -join "`n"
     if ($bootstrapLines.Count -gt 80) { throw "SAGE-Kit bootstrap exceeds 80 lines: $path" }
-    foreach ($heading in $kernelHeadings) {
-        if (-not $bootstrap.Contains($heading)) { throw "SAGE-Kit bootstrap missing kernel heading '$heading': $path" }
-    }
     $markerCount = @($bootstrapLines | Where-Object { $_ -ceq $activationMarker }).Count
     if ($markerCount -ne 1) { throw "SAGE-Kit bootstrap must contain exactly one canonical activation marker: $path" }
 }

@@ -25,7 +25,7 @@ reviews.
 
 The first progress update after activation emits this non-persistent marker:
 
-SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>
+SAGE_ACTIVE source=<project-entry> governance=<Light|Standard|Heavy> authority=<current-reference> profiles=<selected-or-none>
 
 It is routing state, not execution, safety, permission, or compliance proof,
 and must not be written to project documents, memory, receipts, or ledgers.

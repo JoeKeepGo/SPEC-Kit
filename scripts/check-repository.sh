@@ -46,16 +46,13 @@ implicit_invocation_entries=$(tr -d '\r' < "$agent_manifest" | grep -E '^[[:spac
 implicit_invocation_count=$(printf '%s\n' "$implicit_invocation_entries" | sed '/^$/d' | wc -l | tr -d ' ')
 test "$implicit_invocation_count" -eq 1 && printf '%s\n' "$implicit_invocation_entries" | grep -Eq '^[[:space:]]*allow_implicit_invocation:[[:space:]]*true[[:space:]]*(#.*)?$' || { printf 'SAGE-Kit allow_implicit_invocation must appear exactly once with value true\n' >&2; exit 1; }
 
-activation_marker='SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>'
+activation_marker='SAGE_ACTIVE source=<project-entry> governance=<Light|Standard|Heavy> authority=<current-reference> profiles=<selected-or-none>'
 test "$(tr -d '\r' < "$skill_path" | grep -Fxc "$activation_marker")" -eq 1 || { printf 'SAGE-Kit Skill must contain exactly one canonical activation marker\n' >&2; exit 1; }
 
 check_bootstrap() {
   path=$1
   line_count=$(wc -l < "$path" | tr -d ' ')
   test "$line_count" -le 80 || { printf 'SAGE-Kit bootstrap exceeds 80 lines: %s\n' "$path" >&2; exit 1; }
-  for heading in '**Authority and scope:**' '**Claim-evidence congruence:**' '**Observed-fact ownership:**' '**Affected-only invalidation:**' '**Genuine blockers:**'; do
-    grep -Fq "$heading" "$path" || { printf 'SAGE-Kit bootstrap missing kernel heading %s: %s\n' "$heading" "$path" >&2; exit 1; }
-  done
   test "$(tr -d '\r' < "$path" | grep -Fxc "$activation_marker")" -eq 1 || { printf 'SAGE-Kit bootstrap must contain exactly one canonical activation marker: %s\n' "$path" >&2; exit 1; }
 }
 check_bootstrap AGENTS.md

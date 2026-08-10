@@ -23,7 +23,7 @@ An automatic project-instruction entry loads the lightweight kernel defined by
   loads this complete Skill once for the active task.
 - The first progress update after activation emits this non-persistent marker:
 
-SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>
+SAGE_ACTIVE source=<project-entry> governance=<Light|Standard|Heavy> authority=<current-reference> profiles=<selected-or-none>
 
 It is routing state, not execution, safety, permission, containment, or
 compliance proof and is never persisted to project documents, memory, receipts,
