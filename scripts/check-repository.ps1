@@ -15,7 +15,8 @@ $required = @(
     'contracts/task-dispatch-v2/task.schema.json',
     'contracts/task-dispatch-v2/evidence.schema.json',
     'contracts/canonical-authority-pointers.txt',
-    'skills/sage-kit/SKILL.md'
+    'skills/sage-kit/SKILL.md',
+    'skills/sage-kit/agents/openai.yaml'
 )
 foreach ($path in $required) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "missing required path: $path" }
@@ -51,35 +52,32 @@ $skill = Get-Content -LiteralPath 'skills/sage-kit/SKILL.md' -Raw
 $skillFrontmatter = [regex]::Match($skill, '(?s)\A---\r?\n(?<content>.*?)\r?\n---(?:\r?\n|\z)')
 if (-not $skillFrontmatter.Success) { throw 'invalid Skill frontmatter' }
 $skillFrontmatterText = $skillFrontmatter.Groups['content'].Value
-if ($skillFrontmatterText -notmatch '(?m)^name: sage-kit\r?$') { throw 'missing Skill name' }
-$skillDescriptionMatch = [regex]::Match($skillFrontmatterText, '(?m)^description:[ \t]*(?<value>.+?)\r?$')
-if (-not $skillDescriptionMatch.Success) { throw 'missing Skill description' }
-$skillDescription = $skillDescriptionMatch.Groups['value'].Value.Trim()
-foreach ($fragment in @('SAGE-governed', 'adoption', 'planning', 'implementation', 'review', 'release', 'ordinary chat', 'projects that have not adopted SAGE-Kit')) {
-    if ($skillDescription -notlike "*$fragment*") { throw "Skill description missing required scope or exclusion: $fragment" }
-}
-if ($skillFrontmatterText -notmatch '(?m)^disable-model-invocation:[ \t]*false[ \t]*\r?$') { throw 'Skill disable-model-invocation must be false' }
-if ($skill -notmatch 'No CLI, package runtime, daemon, or hidden validator is required') { throw 'missing model-native architecture statement' }
-if (($skill -replace '`', '') -notlike '*SAGE-Kit adoption does not depend on $sage-kit appearing in every prompt.*') { throw 'Skill automatic activation must not require explicit invocation per prompt' }
+$skillNameEntries = @([regex]::Matches($skillFrontmatterText, '(?m)^name:[^\r\n]*\r?$'))
+if ($skillNameEntries.Count -ne 1 -or $skillNameEntries[0].Value -notmatch '\Aname:[ \t]*sage-kit[ \t]*\r?\z') { throw 'Skill name must appear exactly once with value sage-kit' }
+$skillDescriptionEntries = @([regex]::Matches($skillFrontmatterText, '(?m)^description:[^\r\n]*\r?$'))
+if ($skillDescriptionEntries.Count -ne 1) { throw 'Skill description must appear exactly once' }
+$skillDescriptionValue = ($skillDescriptionEntries[0].Value -replace '\r$', '') -replace '^description:[ \t]*', ''
+if ([string]::IsNullOrWhiteSpace($skillDescriptionValue)) { throw 'Skill description must have a value' }
+$modelInvocationEntries = @([regex]::Matches($skillFrontmatterText, '(?m)^disable-model-invocation:[^\r\n]*\r?$'))
+if ($modelInvocationEntries.Count -ne 1 -or $modelInvocationEntries[0].Value -notmatch '\Adisable-model-invocation:[ \t]*false[ \t]*\r?\z') { throw 'Skill disable-model-invocation must appear exactly once with value false' }
 
 $agentManifest = Get-Content -LiteralPath 'skills/sage-kit/agents/openai.yaml' -Raw
-$implicitInvocationEntries = @([regex]::Matches($agentManifest, '(?m)^[ \t]*allow_implicit_invocation:[ \t]*(?<value>[^ \t#\r\n]+)[ \t]*(?:#.*)?\r?$'))
-if ($implicitInvocationEntries.Count -ne 1 -or $implicitInvocationEntries[0].Groups['value'].Value -cne 'true') { throw 'SAGE-Kit allow_implicit_invocation must be exactly true' }
-if ($agentManifest -notmatch 'Apply SAGE-Kit automatically') { throw 'SAGE-Kit agent manifest is missing automatic activation guidance' }
-if ($agentManifest -notmatch 'Explicit \$sage-kit invocation is an override or diagnostic') { throw 'SAGE-Kit agent manifest is missing explicit invocation override guidance' }
+$implicitInvocationEntries = @([regex]::Matches($agentManifest, '(?m)^[ \t]*allow_implicit_invocation:[^\r\n]*\r?$'))
+if ($implicitInvocationEntries.Count -ne 1 -or $implicitInvocationEntries[0].Value -notmatch '\A[ \t]*allow_implicit_invocation:[ \t]*true[ \t]*(?:#.*)?\r?\z') { throw 'SAGE-Kit allow_implicit_invocation must appear exactly once with value true' }
 
-$kernelConcepts = @('Authority and scope', 'Claim-evidence congruence', 'Observed-fact ownership', 'Affected-only invalidation', 'Genuine blockers')
-$bootstrapRequirements = @('\bSAGE_ACTIVE\b', '\bLight work\b', '\bStandard or Heavy\b', 'Explicit \$sage-kit\s+invocation remains an override or\s+diagnostic', 'fallback\s+only\s+on\s+hosts\s+with\s+neither\s+automatic\s+project\s+instructions\s+nor\s+implicit\s+Skill\s+invocation')
+$activationMarker = 'SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>'
+$skillMarkerCount = @((Get-Content -LiteralPath 'skills/sage-kit/SKILL.md') | Where-Object { $_ -ceq $activationMarker }).Count
+if ($skillMarkerCount -ne 1) { throw 'SAGE-Kit Skill must contain exactly one canonical activation marker' }
+$kernelHeadings = @('**Authority and scope:**', '**Claim-evidence congruence:**', '**Observed-fact ownership:**', '**Affected-only invalidation:**', '**Genuine blockers:**')
 foreach ($path in @('AGENTS.md', 'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md')) {
-    $bootstrap = Get-Content -LiteralPath $path -Raw
-    $bootstrapRoutingText = $bootstrap -replace '`', ''
-    if (@(Get-Content -LiteralPath $path).Count -gt 80) { throw "SAGE-Kit bootstrap exceeds 80 lines: $path" }
-    foreach ($concept in $kernelConcepts) {
-        if ($bootstrap -notlike "*$concept*") { throw "SAGE-Kit bootstrap missing kernel concept '$concept': $path" }
+    $bootstrapLines = @(Get-Content -LiteralPath $path)
+    $bootstrap = $bootstrapLines -join "`n"
+    if ($bootstrapLines.Count -gt 80) { throw "SAGE-Kit bootstrap exceeds 80 lines: $path" }
+    foreach ($heading in $kernelHeadings) {
+        if (-not $bootstrap.Contains($heading)) { throw "SAGE-Kit bootstrap missing kernel heading '$heading': $path" }
     }
-    foreach ($requirement in $bootstrapRequirements) {
-        if ($bootstrapRoutingText -notmatch $requirement) { throw "SAGE-Kit bootstrap missing activation routing guidance: $path" }
-    }
+    $markerCount = @($bootstrapLines | Where-Object { $_ -ceq $activationMarker }).Count
+    if ($markerCount -ne 1) { throw "SAGE-Kit bootstrap must contain exactly one canonical activation marker: $path" }
 }
 
 foreach ($path in ($tracked | Where-Object { $_ -like '*.json' })) {

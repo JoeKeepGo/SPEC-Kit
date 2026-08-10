@@ -10,7 +10,7 @@ for path in README.md docs/SAGE_CORE.md docs/agent/AGENT_HARNESS.md \
   contracts/task-dispatch-v2/task.schema.json \
   contracts/task-dispatch-v2/evidence.schema.json \
   contracts/canonical-authority-pointers.txt \
-  skills/sage-kit/SKILL.md; do
+  skills/sage-kit/SKILL.md skills/sage-kit/agents/openai.yaml; do
   test -f "$path" || { printf 'missing required path: %s\n' "$path" >&2; exit 1; }
 done
 
@@ -32,48 +32,31 @@ skill_frontmatter=$(awk '
   { line = $0; sub(/\r$/, "", line); if (line == "---") { found = 1; exit }; print line }
   END { if (!found) exit 1 }
 ' "$skill_path") || { printf 'invalid Skill frontmatter\n' >&2; exit 1; }
-printf '%s\n' "$skill_frontmatter" | grep -qx 'name: sage-kit'
-skill_description_lines=$(printf '%s\n' "$skill_frontmatter" | grep -E '^description:[[:space:]]*[^[:space:]]' || true)
-skill_description_count=$(printf '%s\n' "$skill_description_lines" | sed '/^$/d' | wc -l | tr -d ' ')
-test "$skill_description_count" -eq 1 || { printf 'missing or malformed Skill description\n' >&2; exit 1; }
-skill_description=$(printf '%s\n' "$skill_description_lines" | sed -E "s/^description:[[:space:]]*//; s/^'(.*)'$/\\1/; s/^\"(.*)\"$/\\1/")
-for fragment in 'SAGE-governed' adoption planning implementation review release 'ordinary chat' 'projects that have not adopted SAGE-Kit'; do
-  case "$skill_description" in
-    *"$fragment"*) ;;
-    *) printf 'Skill description missing required scope or exclusion: %s\n' "$fragment" >&2; exit 1 ;;
-  esac
-done
-model_invocation_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^disable-model-invocation:[[:space:]]*[^[:space:]#]+[[:space:]]*$' || true)
+skill_name_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^name:' || true)
+skill_name_count=$(printf '%s\n' "$skill_name_entries" | sed '/^$/d' | wc -l | tr -d ' ')
+test "$skill_name_count" -eq 1 && printf '%s\n' "$skill_name_entries" | grep -Eq '^name:[[:space:]]*sage-kit[[:space:]]*$' || { printf 'Skill name must appear exactly once with value sage-kit\n' >&2; exit 1; }
+skill_description_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^description:' || true)
+skill_description_count=$(printf '%s\n' "$skill_description_entries" | sed '/^$/d' | wc -l | tr -d ' ')
+test "$skill_description_count" -eq 1 && printf '%s\n' "$skill_description_entries" | grep -Eq '^description:[[:space:]]*[^[:space:]]' || { printf 'Skill description must appear exactly once with a value\n' >&2; exit 1; }
+model_invocation_entries=$(printf '%s\n' "$skill_frontmatter" | grep -E '^disable-model-invocation:' || true)
 model_invocation_count=$(printf '%s\n' "$model_invocation_entries" | sed '/^$/d' | wc -l | tr -d ' ')
-test "$model_invocation_count" -eq 1 && printf '%s\n' "$model_invocation_entries" | grep -qx 'disable-model-invocation:[[:space:]]*false[[:space:]]*' || { printf 'Skill disable-model-invocation must be false\n' >&2; exit 1; }
-grep -Fq 'No CLI, package runtime, daemon, or hidden validator is required' "$skill_path"
-sed 's/`//g' "$skill_path" | grep -Fq 'SAGE-Kit adoption does not depend on $sage-kit appearing in every prompt.' || { printf 'Skill automatic activation must not require explicit invocation per prompt\n' >&2; exit 1; }
+test "$model_invocation_count" -eq 1 && printf '%s\n' "$model_invocation_entries" | grep -Eq '^disable-model-invocation:[[:space:]]*false[[:space:]]*$' || { printf 'Skill disable-model-invocation must appear exactly once with value false\n' >&2; exit 1; }
 
-implicit_invocation_entries=$(tr -d '\r' < "$agent_manifest" | grep -E '^[[:space:]]*allow_implicit_invocation:[[:space:]]*[^[:space:]#]+[[:space:]]*(#.*)?$' || true)
+implicit_invocation_entries=$(tr -d '\r' < "$agent_manifest" | grep -E '^[[:space:]]*allow_implicit_invocation:' || true)
 implicit_invocation_count=$(printf '%s\n' "$implicit_invocation_entries" | sed '/^$/d' | wc -l | tr -d ' ')
-test "$implicit_invocation_count" -eq 1 && printf '%s\n' "$implicit_invocation_entries" | grep -Eq '^[[:space:]]*allow_implicit_invocation:[[:space:]]*true[[:space:]]*(#.*)?$' || { printf 'SAGE-Kit allow_implicit_invocation must be exactly true\n' >&2; exit 1; }
-grep -Fq 'Apply SAGE-Kit automatically' "$agent_manifest" || { printf 'SAGE-Kit agent manifest is missing automatic activation guidance\n' >&2; exit 1; }
-grep -Fq 'Explicit $sage-kit invocation is an override or diagnostic' "$agent_manifest" || { printf 'SAGE-Kit agent manifest is missing explicit invocation override guidance\n' >&2; exit 1; }
+test "$implicit_invocation_count" -eq 1 && printf '%s\n' "$implicit_invocation_entries" | grep -Eq '^[[:space:]]*allow_implicit_invocation:[[:space:]]*true[[:space:]]*(#.*)?$' || { printf 'SAGE-Kit allow_implicit_invocation must appear exactly once with value true\n' >&2; exit 1; }
+
+activation_marker='SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>'
+test "$(tr -d '\r' < "$skill_path" | grep -Fxc "$activation_marker")" -eq 1 || { printf 'SAGE-Kit Skill must contain exactly one canonical activation marker\n' >&2; exit 1; }
 
 check_bootstrap() {
   path=$1
   line_count=$(wc -l < "$path" | tr -d ' ')
   test "$line_count" -le 80 || { printf 'SAGE-Kit bootstrap exceeds 80 lines: %s\n' "$path" >&2; exit 1; }
-  for concept in 'Authority and scope' 'Claim-evidence congruence' 'Observed-fact ownership' 'Affected-only invalidation' 'Genuine blockers'; do
-    grep -Fq "$concept" "$path" || { printf 'SAGE-Kit bootstrap missing kernel concept %s: %s\n' "$concept" "$path" >&2; exit 1; }
+  for heading in '**Authority and scope:**' '**Claim-evidence congruence:**' '**Observed-fact ownership:**' '**Affected-only invalidation:**' '**Genuine blockers:**'; do
+    grep -Fq "$heading" "$path" || { printf 'SAGE-Kit bootstrap missing kernel heading %s: %s\n' "$heading" "$path" >&2; exit 1; }
   done
-  for routing in 'SAGE_ACTIVE' 'Light work' 'Standard or Heavy'; do
-    grep -Fq "$routing" "$path" || { printf 'SAGE-Kit bootstrap missing activation routing guidance: %s\n' "$path" >&2; exit 1; }
-  done
-  bootstrap_text=$(tr -d '\r`' < "$path" | tr '\n' ' ')
-  case "$bootstrap_text" in
-    *'Explicit $sage-kit invocation remains an override or diagnostic'*) ;;
-    *) printf 'SAGE-Kit bootstrap missing activation routing guidance: %s\n' "$path" >&2; exit 1 ;;
-  esac
-  case "$bootstrap_text" in
-    *'fallback only on hosts with neither automatic project instructions nor implicit Skill invocation'*) ;;
-    *) printf 'SAGE-Kit bootstrap missing activation routing guidance: %s\n' "$path" >&2; exit 1 ;;
-  esac
+  test "$(tr -d '\r' < "$path" | grep -Fxc "$activation_marker")" -eq 1 || { printf 'SAGE-Kit bootstrap must contain exactly one canonical activation marker: %s\n' "$path" >&2; exit 1; }
 }
 check_bootstrap AGENTS.md
 check_bootstrap docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md

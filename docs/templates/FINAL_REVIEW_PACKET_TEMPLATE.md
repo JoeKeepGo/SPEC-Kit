@@ -13,9 +13,9 @@ Review scope / candidate reference:
 Acceptance criteria and required project checks:
 Evidence inspected and limitations:
 
-| Claim ID | Claimed Outcome / Realization Depth | Evidence Fidelity / Currency | Substitution Or False-Green Check | Result / Limitation |
-|---|---|---|---|---|
-| `<affected claim or compact summary>` | `<outcome / depth>` | `<fidelity / currency>` | `<none or narrower evidence substituted>` | `<supported or limitation>` |
+| Affected Material Claim ID | Claimed Outcome / Realization Depth | Evidence Fidelity | Evidence Result | Evidence Currency | Substitution Or False-Green Check | Limitation |
+|---|---|---|---|---|---|---|
+| `<affected claim>` | `<outcome / depth>` | `<fidelity>` | `PASS`, `FAIL`, `INCOMPLETE`, `SKIPPED`, or `UNAVAILABLE` | `CURRENT`, `HISTORICAL_ONLY`, `STALE`, or `INVALIDATED` | `<none or narrower evidence substituted>` | `<limitation or none>` |
 
 | Finding | Severity | Evidence | Blocking reason | Corrective boundary / concern |
 |---|---|---|---|---|

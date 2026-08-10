@@ -3,6 +3,9 @@
 Use this file to define the durable project boundary. Replace every
 placeholder before implementation work depends on this profile.
 
+This profile declares project requirements and goals, then references the
+project claim catalog. Stable claim entries live only in that catalog.
+
 ## Product Summary
 
 Describe what the product does, who it serves, and the primary value it
@@ -40,12 +43,14 @@ provides.
 
 ## Product Requirements
 
-Use the claim vocabulary from
-[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+Claim catalog reference: `<project capability map instantiated from
+docs/templates/CAPABILITY_MAP_TEMPLATE.md>`
 
-| Claim ID | Requirement | Supported Entry | Observable Outcome | Delivery / Recovery (if claimed) | Required Evidence Depth / Fidelity |
-|---|---|---|---|---|---|
-| `CLAIM-001` | `<required capability>` | `<intended caller or trigger>` | `<acceptance-observable result>` | `<boundary or none claimed>` | `<depth / fidelity>` |
+Do not copy stable claim entry, outcome, depth, or fidelity fields here.
+
+| Requirement ID | Requirement | Goal IDs | Claim IDs In Catalog |
+|---|---|---|---|
+| `R-001` | `<required capability or constraint>` | `<G-...>` | `<CLAIM-...>` |
 
 ## Security And Privacy Boundaries
 

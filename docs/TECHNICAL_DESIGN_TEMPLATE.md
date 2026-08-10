@@ -1,8 +1,11 @@
 # Technical Design Template
 
 Use this document to describe how the project is structured and how major
-components interact. Route material capability claims through
-[`CLAIM_EVIDENCE_TRUST.md`](agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001).
+components interact. Stable material claim definitions remain in the project
+claim catalog. This design records only how Claim IDs map to composition and
+delivery implementation.
+
+Claim catalog reference: `<project capability map>`
 
 ## Architecture Summary
 
@@ -10,9 +13,15 @@ Describe the target architecture in a few paragraphs.
 
 ## Components
 
-| Component | Claim IDs | Owns | Composition / Wiring | Does Not Own |
-|---|---|---|---|---|
-| `<component>` | `<CLAIM-...>` | `<responsibilities>` | `<registration, configuration, collaborators>` | `<non-responsibilities>` |
+| Component | Owns | Composition / Wiring | Does Not Own |
+|---|---|---|---|
+| `<component>` | `<responsibilities>` | `<registration, configuration, collaborators>` | `<non-responsibilities>` |
+
+## Claim Implementation Mapping
+
+| Claim ID | Composition / Wiring Implementation | Delivery Implementation (if claimed) |
+|---|---|---|
+| `CLAIM-...` | `<components, registration, configuration, and entry-path implementation>` | `<package, deployment, migration, or consumption implementation>` |
 
 ## Data Ownership
 
@@ -21,9 +30,9 @@ exports. If the project has no durable data, state that explicitly.
 
 ## Public Contracts
 
-| Contract | Claim IDs | Owner | Supported Entry / Consumers | Required Evidence Depth / Fidelity |
-|---|---|---|---|---|
-| `<contract>` | `<CLAIM-...>` | `<owner>` | `<entry path and consumers>` | `<depth / fidelity>` |
+| Contract | Owner | Consumers |
+|---|---|---|
+| `<contract>` | `<owner>` | `<consumers>` |
 
 ## Runtime Boundaries
 
@@ -31,8 +40,8 @@ Describe processes, services, CLIs, jobs, workers, devices, databases, queues,
 or other runtime boundaries that apply to this project.
 
 Use `not applicable` only with a reason when the project has no runtime
-boundary. For each applicable claim, name the path to its observable outcome
-and any delivery or recovery boundary the claim includes.
+boundary. Connect applicable boundaries to claims only in the Claim
+Implementation Mapping; do not restate claim outcomes or proof requirements.
 
 ## Error Handling
 

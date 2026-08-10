@@ -6,15 +6,18 @@ artifact. One outcome may include cohesive UI, API, data, and runtime support.
 Review is normally a gate/node, and becomes its own milestone only for an
 independent release, authority, or cross-milestone acceptance boundary. Use
 [`CLAIM_EVIDENCE_TRUST.md`](../agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001)
-for claim depth, fidelity, and currency.
+to interpret the referenced claim and evidence state.
 
-## Outcome And Authority
+Record only the selected Claim IDs, their catalog reference, and this
+milestone's delta and acceptance. Do not copy stable claim entries, supported
+outcomes, depth, or fidelity from the catalog.
 
-- Claim IDs / product outcome:
-- Supported entry and observable outcome:
-- Composition / wiring in scope:
-- Delivery / recovery boundary, if claimed:
-- Required evidence depth / fidelity:
+## Claim Selection And Delta
+
+- Claim catalog reference:
+- Claim IDs:
+- Delta in this milestone:
+- Acceptance for this delta:
 - Project authority and acceptance owner:
 - Scope / non-goals:
 - Governance level and permission mode:
@@ -22,7 +25,7 @@ for claim depth, fidelity, and currency.
 
 ## Acceptance And Execution
 
-- Observable acceptance:
+- Acceptance checks for this delta:
 - Affected paths/contracts:
 - Dependencies and useful serial/parallel boundaries:
 - Project-required focused checks and final CI gate, if any:

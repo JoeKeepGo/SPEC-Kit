@@ -1,6 +1,6 @@
 ---
 name: sage-kit
-description: 'Use for SAGE-Kit adoption and SAGE-governed project planning, implementation, milestone or acceptance work, review, corrective action, release, handoff, and capability or claim-evidence trust decisions. Invoke implicitly for Standard or Heavy work, and for acceptance, review, corrective, or release work, when project instructions select SAGE-Kit; Light work may stay on the project kernel. Do not activate for ordinary chat, unrelated questions, or projects that have not adopted SAGE-Kit.'
+description: 'Use only for a SAGE-Kit adoption request, explicit $sage-kit invocation, or Standard/Heavy, acceptance, review, corrective, or release work in a project that has already adopted SAGE-Kit. Do not implicitly load this complete Skill for Light work unless the user explicitly overrides the kernel-only route. Absent an adoption request or explicit invocation, do not activate for ordinary chat, unrelated questions, or projects that have not adopted SAGE-Kit.'
 disable-model-invocation: false
 ---
 
@@ -16,21 +16,26 @@ SAGE-Kit adoption does not depend on `$sage-kit` appearing in every prompt.
 An automatic project-instruction entry loads the lightweight kernel defined by
 [`docs/agent/CLAIM_EVIDENCE_TRUST.md`](../../docs/agent/CLAIM_EVIDENCE_TRUST.md).
 
-- Light work may use only that kernel when current project instructions are
-  sufficient.
+- Light work must use only that kernel when current project instructions are
+  sufficient. Do not implicitly load this complete Skill unless the user
+  explicitly overrides the kernel-only route.
 - Standard or Heavy work, and acceptance, review, corrective, or release work,
   loads this complete Skill once for the active task.
-- The first progress update after activation emits the non-persistent
-  `SAGE_ACTIVE` routing marker in the canonical format. It is not execution,
-  safety, permission, containment, or compliance proof and is never persisted
-  to project documents, memory, receipts, ledgers, or runtime state.
+- The first progress update after activation emits this non-persistent marker:
+
+SAGE_ACTIVE source=<...> governance=<Light|Standard|Heavy> authority=<...> profiles=<...>
+
+It is routing state, not execution, safety, permission, containment, or
+compliance proof and is never persisted to project documents, memory, receipts,
+ledgers, or runtime state.
 - Explicit invocation remains an override and diagnostic path. It is required
   as a fallback only when the host has neither automatic project instructions
   nor implicit Skill invocation.
 
-Do not activate for ordinary chat, unrelated questions, or a project that has
-not adopted SAGE-Kit. Host project instructions and implicit Skill matching
-guide model behavior; they do not create hard enforcement.
+Absent an adoption request or explicit invocation, do not activate for ordinary
+chat, unrelated questions, or a project that has not adopted SAGE-Kit. Host
+project instructions and implicit Skill matching guide model behavior; they do
+not create hard enforcement.
 
 Project-owned current authority wins over framework guidance. Resolve, in
 order:

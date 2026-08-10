@@ -57,7 +57,7 @@ This rule is technology-neutral. For example:
 
 ## Claim-Evidence Trust Model
 
-Every material claim is evaluated along three independent dimensions. Record
+Every material claim is evaluated along four independent dimensions. Record
 them only when the distinction affects a decision; a compact table is enough.
 The dimensions do not grant permission, declare completion, or create human
 acceptance.
@@ -98,20 +98,43 @@ itself authorize production work or accept the outcome.
 
 ### Evidence Currency
 
+Currency describes only whether evidence remains applicable and timely. It
+does not encode the result of the check or review.
+
 | Value | Meaning |
 |---|---|
-| `CURRENT` | The evidence is attributable, passed, and still applies to the current claim inputs, scope, revision, and target. |
+| `CURRENT` | The evidence still applies to the current claim inputs, scope, target, and relevant change history. |
 | `HISTORICAL_ONLY` | The evidence preserves an immutable prior event or acceptance, but current applicability has not been established. |
 | `STALE` | The evidence may once have applied, but age or input uncertainty prevents current reliance. |
 | `INVALIDATED` | A relevant change, contradiction, or superseding result is known to have broken its applicability. |
-| `NOT_EVALUATED` | No applicable evaluation has been performed. |
-| `NON_PASS` | The applicable check or review failed, was incomplete, was skipped, or was unavailable; it is not positive evidence. |
+
+### Evidence Result
+
+Result records what happened independently of currency:
+
+| Value | Meaning |
+|---|---|
+| `PASS` | The completed check or review supports the property it evaluated. |
+| `FAIL` | The completed check or review contradicts the property it evaluated. |
+| `INCOMPLETE` | The check or review began but did not produce a complete result. |
+| `SKIPPED` | The applicable check or review was intentionally not run. |
+| `UNAVAILABLE` | The applicable check or review could not be run or obtained. |
+
+A current `FAIL` is current counterevidence and takes precedence over an older
+`PASS` for the same claim inputs. Never ignore applicable current evidence
+because its result is not `PASS`.
 
 Historical acceptance is an immutable event. It is not a warranty of current
 reliability and must not be rewritten when later evidence changes. A hash,
 receipt, signature, schema match, or contract-compliance result proves only the
 property it actually checked; none automatically proves runtime behavior,
 product outcome, or usability.
+
+Evidence is bound to the revision where it was produced. Reuse at a later
+revision does not require the revision SHA to match. Instead, show that the
+relevant diff from the bound revision to the current revision leaves every
+input to the claim unchanged, including applicable implementation, wiring,
+entry path, target, contract, and acceptance inputs.
 
 When an input changes, invalidate only affected claims. Trace the changed
 implementation, wiring, entry path, target, contract, or acceptance input to
@@ -125,6 +148,7 @@ One fact has one owner:
 | Fact class | Canonical owner |
 |---|---|
 | Objective, normative authority, permission, acceptance criteria or decision, and next intent | The project-owned current authority and planning documents |
+| Stable project-level claim definitions: Claim ID, supported entry, observable outcome, delivery/recovery scope, and required depth/fidelity | The project's capability map instantiated from `docs/templates/CAPABILITY_MAP_TEMPLATE.md` |
 | Branch, `HEAD`, and dirty state | Git at observation time |
 | Runtime identity, version, configuration, and process state | The observed runtime at observation time |
 | Test, review, or check result | The producing test system, review record, or command output for its bound inputs |
@@ -163,13 +187,21 @@ fidelity. Boundary, recovery, security, migration, or compatibility proof is
 added only when that property is claimed or changed.
 
 Do not create a matrix for every task, run E2E by default, scan history, or
-reconstruct receipts. Product, package, or E2E proof is admitted once for an
-unchanged final candidate only when at least one of these is true:
+reconstruct receipts. Product, package, or E2E proof is admitted only when
+both conditions hold:
 
-- the capability is being established for the first time;
-- relevant wiring, entry paths, or delivered artifacts changed;
-- an explicit product gate requires it; or
-- release acceptance requires it.
+1. the claim or its acceptance criteria require that proof class; and
+2. at least one of these run conditions applies:
+
+   - that required proof class is being established for the claim for the
+     first time;
+   - relevant wiring, entry paths, or delivered artifacts changed;
+   - an explicit product gate requires it; or
+   - release acceptance requires it.
+
+A new claim that requires only implementation proof does not by itself admit
+product, package, or E2E proof. Run admitted expensive proof once for the
+unchanged final candidate.
 
 If an admitted final proof's relevant inputs change, its evidence is
 invalidated and the successor candidate receives one replacement final run.
@@ -183,15 +215,21 @@ correction instead of expanded review.
 
 ## Bounded Scope Correction
 
-An allowlist or frozen task scope is an execution boundary, not design
-authority. A route, registration point, adapter, package manifest, or test
-owner required to close the already authorized capability may enter a bounded
-scope correction when all of these remain unchanged:
+Bounded scope correction applies only to a model-derived allowlist for an
+already authorized capability or to a closure range that authority explicitly
+preauthorized for correction. Within either case, a route, registration point,
+adapter, package manifest, or test owner in the same capability ownership
+boundary may enter the correction when all of these remain unchanged:
 
 - product outcome;
 - permission level;
 - authority and acceptance owner; and
 - public, safety, and security boundaries.
+
+An explicit path scope frozen by a human or project authority is itself an
+authority boundary for this purpose. Never expand it automatically. Return any
+proposed addition to that authority even when it belongs to the same capability
+owner and would otherwise qualify as closure work.
 
 Record the correction and verify only the affected boundary. Return to the
 Project Manager when the correction would introduce a new product capability,
@@ -207,6 +245,8 @@ remains an override and diagnostic path.
   entry for another host, loads the lightweight kernel for project work.
 - The complete Skill permits implicit invocation for Standard or Heavy work,
   and for acceptance, review, corrective, or release work.
+- Light work uses only the project kernel and must not implicitly load the
+  complete Skill unless the user explicitly overrides that route.
 - The first progress update after activation emits one non-persistent marker:
 
   ```text
@@ -229,8 +269,8 @@ receipts, ledgers, or runtime state.
   not create a file per claim.
 - Do not load accepted history by default.
 - Do not multiply verification by milestone count.
-- Reuse evidence whose relevant inputs, scope, revision, and target are
-  unchanged.
+- Reuse evidence at a later revision only when the relevant diff from its bound
+  revision leaves the claim inputs, scope, and target unchanged.
 - Review only the affected boundary.
 - Run admitted final expensive proof once per unchanged final candidate.
 - Do not add Python, a CLI, hooks, a daemon, scheduler, validator, or other
