@@ -31,7 +31,10 @@ The shipped coder and final-review examples preserve role separation. A project
 may explicitly install the path hook only after preflight confirms the host
 emits a structured `file_path`, the matching Shell/PowerShell implementation is
 available, and project authority supplies exact protected paths through the
-newline-separated `SAGE_PROTECTED_PATHS` setting.
+newline-separated `SAGE_PROTECTED_PATHS` setting. If an observed or configured
+path is relative, the hook also requires `CLAUDE_PROJECT_DIR` to name an
+existing absolute project root; it never guesses project identity from the
+process working directory.
 
 The hook is `MANAGED` advisory defense for observed structured edit events. It
 does not parse Bash command text, resolve symlinks/aliases, cover unobserved

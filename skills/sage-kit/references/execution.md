@@ -21,7 +21,7 @@ Standard or Heavy execution; load it once for the active task.
   project CI once only when project authority, acceptance, or a merge/release
   gate requires it; a corrective successor may run it again.
 - Match capability claims to the evidence admitted by
-  [`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md).
+  [`CLAIM_EVIDENCE_TRUST.md`](framework/docs/agent/CLAIM_EVIDENCE_TRUST.md).
   Do not multiply proof by milestone count or infer delivery from local output.
 
 Continue correctives without new approval while findings decrease and scope

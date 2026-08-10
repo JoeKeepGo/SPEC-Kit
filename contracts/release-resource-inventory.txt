@@ -4,6 +4,7 @@ readme_en|README.md
 readme_zh_cn|README.zh-CN.md
 migration_guide|docs/MIGRATION_MODEL_NATIVE.md
 release_guide|docs/RELEASE.md
+skill_manifest|skills/sage-kit/skill-manifest.json
 host_reference_codex|skills/sage-kit/references/codex.md
 host_reference_claude|skills/sage-kit/references/claude.md
 host_reference_opencode|skills/sage-kit/references/opencode.md

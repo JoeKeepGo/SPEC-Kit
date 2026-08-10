@@ -33,7 +33,11 @@ Light 工作不强制使用 Graph。
 
 Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常方式工作：
 
-1. 通过宿主的 Skill 机制引用或安装 [`skills/sage-kit`](skills/sage-kit)。
+1. 通过宿主的 Skill 机制引用或安装完整的
+   [`skills/sage-kit`](skills/sage-kit) 目录。其中的
+   [`skill-manifest.json`](skills/sage-kit/skill-manifest.json) 标识 package，
+   并以 SHA-256 将必需 framework references 绑定到 package-local 文件，
+   因此正常路由不依赖 framework source checkout。
 2. 使用 [`AGENTS.md` bootstrap 模板](docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
    添加轻量项目入口，并指向当前项目 authority。Claude Code 项目使用导入该
    bootstrap 的 `CLAUDE.md`；具体见宿主 reference。
@@ -48,6 +52,10 @@ Skill 安装一次，每个项目完成一次 bootstrap，之后直接按正常�
 建议从 [`SAGE_CORE.md`](docs/SAGE_CORE.md)、
 [`AGENT_HARNESS.md`](docs/agent/AGENT_HARNESS.md) 和
 [`templates`](docs/templates) 开始。
+
+更新 Installed Skill 时应整体替换目录，不要混合不同 release 的单个文件。
+匹配的 source archive 仍可用于深入阅读，但它是可选项；替代 packaged reference
+之前，其文件必须与 manifest 中的 resource digest 一致。
 
 ## 治理等级
 
@@ -111,7 +119,7 @@ contracts/          可选机器可读静态合同
 docs/               唯一治理文档、profiles 与 templates
 skills/sage-kit/    模型激活与宿主路由
 scripts/            轻量仓库完整性检查
-tests/              已发布宿主 hooks 的 Shell/PowerShell 测试
+tests/              已发布适配器与 Skill package 的 Shell/PowerShell 检查
 ```
 
 从旧可执行版本线迁移时，参见

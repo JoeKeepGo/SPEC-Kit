@@ -37,8 +37,11 @@ does not need a Graph.
 
 Install the Skill once, bootstrap each project, and then work normally:
 
-1. Install or reference [`skills/sage-kit`](skills/sage-kit) through the host's
-   Skill mechanism.
+1. Install or reference the complete [`skills/sage-kit`](skills/sage-kit)
+   directory through the host's Skill mechanism. Its
+   [`skill-manifest.json`](skills/sage-kit/skill-manifest.json) identifies the
+   package and binds every required framework reference to a package-local
+   SHA-256 digest, so normal routing does not depend on a source checkout.
 2. Add the lightweight project entry from the
    [`AGENTS.md` bootstrap template](docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md)
    and point it to current project authority. Claude Code projects use a
@@ -55,6 +58,11 @@ Install the Skill once, bootstrap each project, and then work normally:
 Start with [`SAGE_CORE.md`](docs/SAGE_CORE.md),
 [`AGENT_HARNESS.md`](docs/agent/AGENT_HARNESS.md), and the reusable
 [`templates`](docs/templates).
+
+Update the installed Skill as one directory rather than mixing individual
+files from different releases. A matching source archive remains useful for
+deeper reading, but it is optional and must agree with the packaged resource
+digests before it substitutes for a packaged reference.
 
 ## Governance Levels
 
@@ -127,7 +135,7 @@ contracts/          Optional machine-readable static contracts
 docs/               Canonical governance docs, profiles, and templates
 skills/sage-kit/    Model activation and host routing
 scripts/            Lightweight repository-integrity checks
-tests/              Shell/PowerShell tests for shipped host hooks
+tests/              Shell/PowerShell checks for shipped adapters and Skill packaging
 ```
 
 For migration from the former executable line, see the

@@ -17,6 +17,7 @@ $required = @(
     'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md',
     'README.md',
     'skills/sage-kit/SKILL.md',
+    'skills/sage-kit/skill-manifest.json',
     'skills/sage-kit/agents/openai.yaml'
 )
 foreach ($path in $required) {
@@ -113,7 +114,7 @@ foreach ($entryName in $expectedGraphResources.Keys) {
     if ($entry.Value.canonical_sha256.ToLowerInvariant() -ne $actual) { throw "Graph manifest digest mismatch: $resourcePath" }
 }
 
-$releaseIds = @('license', 'readme_en', 'readme_zh_cn', 'migration_guide', 'release_guide', 'host_reference_codex', 'host_reference_claude', 'host_reference_opencode', 'host_reference_kimi', 'claude_agent_coder', 'claude_agent_final_review')
+$releaseIds = @('license', 'readme_en', 'readme_zh_cn', 'migration_guide', 'release_guide', 'skill_manifest', 'host_reference_codex', 'host_reference_claude', 'host_reference_opencode', 'host_reference_kimi', 'claude_agent_coder', 'claude_agent_final_review')
 $releaseEntries = @()
 foreach ($line in (Get-Content -LiteralPath 'contracts/release-resource-inventory.txt')) {
     if ([string]::IsNullOrWhiteSpace($line) -or $line.TrimStart().StartsWith('#')) { continue }

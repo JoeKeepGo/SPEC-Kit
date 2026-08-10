@@ -33,7 +33,7 @@ does not require exact file ownership before technical design. Preserve full
 milestone, wave, phase, and optional Graph depth when those structures add
 decision value.
 
-Use [`CLAIM_EVIDENCE_TRUST.md`](../../../docs/agent/CLAIM_EVIDENCE_TRUST.md)
+Use [`CLAIM_EVIDENCE_TRUST.md`](framework/docs/agent/CLAIM_EVIDENCE_TRUST.md)
 for capability and evidence decisions instead of reproducing its model. Plans
 and planning descendants inherit the same or narrower SAGE boundary; they do
 not recursively reload the Skill or schedule duplicate review.

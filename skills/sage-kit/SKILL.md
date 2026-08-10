@@ -15,7 +15,7 @@ No CLI, package runtime, daemon, or hidden validator is required.
 SAGE-Kit adoption does not depend on `$sage-kit` appearing in every prompt.
 An adopted automatic project-instruction entry is expected to load the
 lightweight kernel defined by
-[`docs/agent/CLAIM_EVIDENCE_TRUST.md`](../../docs/agent/CLAIM_EVIDENCE_TRUST.md)
+[`CLAIM_EVIDENCE_TRUST.md`](references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md)
 when current host version/configuration evidence confirms that behavior.
 
 - Light work, including Light review and mechanical wording/status/EOF
@@ -69,25 +69,33 @@ read-only actor returns a bounded proposed update.
 | Roadmap, milestone, wave, or phase planning | `references/planning.md` |
 | Implementation, debugging, or delegated work | relevant sections of `references/execution.md` |
 | Review, corrective, handoff, acceptance, closeout | `references/review-completion.md` |
-| Capability realization or claim-evidence trust | `docs/agent/CLAIM_EVIDENCE_TRUST.md` when the framework checkout or source archive is available |
-| Core authority and lifecycle | `docs/SAGE_CORE.md` when the framework checkout or source archive is available |
-| Graph and Node Result | `contracts/graph/v1/` only when Graph adds decision value |
+| Capability realization or claim-evidence trust | `references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md` |
+| Core authority and lifecycle | `references/framework/docs/SAGE_CORE.md` |
+| Graph and Node Result | `references/framework/contracts/graph/v1/` only when Graph adds decision value |
 
 Host references are loaded only for the active host: `references/codex.md`,
 `references/claude.md`, `references/opencode.md`, or
 `references/kimi-runtime.md`.
 
-`framework-doc("path[#anchor]")` is a static locator into the matching SAGE-Kit
-source archive. Resolving it reads text only; it does
-not import a package, execute a validator, or change project authority. When
-the referenced source archive is unavailable, use the self-contained guidance in this
-Skill and report any missing project authority directly.
+`skill-manifest.json` is the package identity and required-resource inventory.
+Its resource digests use UTF-8 bytes with CRLF normalized to LF so identity is
+stable across supported hosts.
+Resolve a `framework-doc` locator's quoted `logical-path[#anchor]` by matching
+its logical path to that manifest and reading the listed file relative to this
+`SKILL.md`. Required
+references never search arbitrary checkouts or depend on a machine-specific
+source root. A framework source archive is optional deep-reading material only;
+use it for a packaged logical path only when its canonical file matches the
+manifest resource digest. Resolution reads text only; it does not import a
+package, execute a validator, or change project authority. Missing or
+digest-mismatched required package content is a package-integrity failure.
 
 ## Model-Native Workflow
 
 1. Read current authority, active SPEC, and only task-relevant context.
-2. Select Light, Standard, or Heavy from the canonical matrix in
-   `docs/agent/GOVERNANCE_LEVELS.md`; select permission independently.
+2. Select Light, Standard, or Heavy from the packaged canonical matrix in
+   `references/framework/docs/agent/GOVERNANCE_LEVELS.md`; select permission
+   independently.
 3. Create a bounded plan. Add a Graph only for meaningful dependencies, joins,
    gates, or parallel work.
 4. Edit only allowed surfaces and run project-native focused checks.
@@ -134,8 +142,10 @@ compaction or resume when the prior content is no longer observable.
 Descendants do not recursively bootstrap SAGE-Kit, reload the same Skill through
 a nested workflow, or create a duplicate review of the same unchanged boundary.
 When a host isolates subagent context, provide only the compact authority
-boundary and selected profile identity needed by that descendant. Never put the
-`SAGE_ACTIVE` marker in a handoff.
+boundary, selected profile identity, and the package identity and selected
+resource digest needed by that descendant. The descendant resolves that
+resource from the same installed package identity instead of searching for a
+framework checkout. Never put the `SAGE_ACTIVE` marker in a handoff.
 
 Continuation depends on the host and is bounded to already admitted,
 preauthorized milestones. The coordinator envelope names authority boundary,
@@ -154,7 +164,7 @@ inputs and scope are unchanged. A corrective successor may run CI again and
 receives targeted re-review without replaying unrelated lanes.
 
 Capability and evidence claims follow
-[`docs/agent/CLAIM_EVIDENCE_TRUST.md`](../../docs/agent/CLAIM_EVIDENCE_TRUST.md).
+[`CLAIM_EVIDENCE_TRUST.md`](references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md).
 Do not create a claim matrix unless one compact table adds decision value, and
 do not admit product, package, or E2E proof merely because work was split into
 more milestones. Once such proof is admitted, rerun the affected proof whenever
