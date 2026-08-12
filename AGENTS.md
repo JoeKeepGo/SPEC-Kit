@@ -15,6 +15,20 @@ work:
    relevant inputs changed.
 5. **Genuine blockers:** Block only when an authority, permission, required
    input, or required evidence gap prevents safe progress.
+6. **Human risk decisions:** Within host, system, and tool boundaries, an
+   explicit human risk classification constrains the agent's discretionary
+   safety threshold but does not grant permission. Permission remains target-
+   and action-scoped under explicit human authorization and current project
+   authority. An agent may report concrete contrary evidence and propose the
+   smallest safeguard, but must not replace the human risk decision with a
+   stricter personal threshold, invent a gate, or silently reduce authorized
+   implementation to contract-only, synthetic-only, or no-op work.
+
+Before optional Skill routing, a confirmed Codex GPT-5.6 runtime disables the
+`using-superpowers` Skill and every Superpowers workflow for the controller and
+all descendants. Apply the complete package-local policy in
+`skills/sage-kit/references/codex.md` and continue with model-native engineering
+capabilities.
 
 Route from these compact risk discriminators before loading the complete Skill:
 
@@ -47,3 +61,14 @@ Explicit `$sage-kit` invocation remains an override or diagnostic and is the
 fallback whenever adoption, current authority, or required Skill content cannot
 be observed or resolved through automatic project instructions and implicit
 routing.
+
+## Other Skills
+
+Additional project or host Skills may be listed below this section. Invoke a
+Skill only when its declared trigger matches the current task and is not
+disabled by host/runtime policy, and load only the task-relevant guidance. A
+Skill may contribute specialist methods, tools, and checks within the existing
+controller and authority. It does not expand scope, permission, gates, or
+acceptance authority, and it must not override an explicit human decision or
+introduce a second generic orchestration or review workflow for the same
+unchanged scope.

@@ -119,6 +119,83 @@ Assert-True ($null -ne $bootstrapResource) 'bootstrap template is absent from ma
 $bootstrapContent = Get-Content -LiteralPath (Join-Path $skillRoot ($bootstrapResource.package_path -replace '/', [IO.Path]::DirectorySeparatorChar)) -Raw
 Assert-True ($bootstrapContent -match 'package identity\s+and selected\s+resource\s+digest') 'bootstrap handoff omits package identity or selected resource digest'
 Assert-True ($bootstrapContent -match 'never the activation marker') 'bootstrap handoff does not prohibit activation-marker propagation'
+$bootstrapSurfaces = @(
+    $bootstrapContent,
+    (Get-Content -LiteralPath (Join-Path $repoRoot 'AGENTS.md') -Raw),
+    (Get-Content -LiteralPath (Join-Path $repoRoot 'docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md') -Raw)
+)
+foreach ($surface in $bootstrapSurfaces) {
+    $surfaceFlat = $surface -replace '\s+', ' '
+    Assert-True ($surface -match 'explicit human risk classification constrains the agent') 'bootstrap does not preserve explicit human risk authority'
+    Assert-True ($surface -match 'does not grant permission') 'human risk classification can appear to grant permission'
+    Assert-True ($surface -match 'Permission remains target-\s+and action-scoped') 'bootstrap does not preserve target- and action-scoped authorization'
+    Assert-True ($surface -match 'must not replace the human risk decision with a\s+stricter personal threshold') 'bootstrap permits model risk preference to override human authority'
+    Assert-True ($surface -match '## Other Skills') 'bootstrap does not provide an extension point for other Skills'
+    Assert-True ($surfaceFlat -match 'does not expand scope, permission, gates, or acceptance authority') 'other Skills can appear to expand project authority'
+    Assert-True ($surfaceFlat -match 'specialist methods, tools, and checks within the existing controller and authority') 'bootstrap prevents specialist Skills from participating under existing authority'
+    Assert-True ($surfaceFlat -match 'must not override an explicit human decision or introduce a second generic orchestration or review workflow for the same unchanged scope') 'other Skill routing does not narrowly prevent duplicate generic workflows'
+    Assert-True ($surface -match 'host/runtime policy') 'other Skill routing does not defer to host/runtime disable policy'
+    Assert-True ($surface -match 'confirmed Codex GPT-5\.6') 'bootstrap omits the conditional Codex GPT-5.6 guard'
+    Assert-True ($surface -match 'references/codex\.md') 'bootstrap does not point to the canonical Codex runtime policy'
+}
+
+$skillContent = Get-Content -LiteralPath (Join-Path $skillRoot 'SKILL.md') -Raw
+$codexContent = Get-Content -LiteralPath (Join-Path $skillRoot 'references/codex.md') -Raw
+$codexFlat = $codexContent -replace '\s+', ' '
+$planningContent = Get-Content -LiteralPath (Join-Path $skillRoot 'references/planning.md') -Raw
+$openAiContent = Get-Content -LiteralPath (Join-Path $skillRoot 'agents/openai.yaml') -Raw
+$openAiFlat = $openAiContent -replace '\s+', ' '
+$nonCodexProfiles = @('references/claude.md', 'references/kimi-runtime.md', 'references/opencode.md')
+
+Assert-True ($codexContent -match '## GPT-5\.6 Runtime Policy') 'Codex profile is missing the canonical GPT-5.6 runtime policy'
+Assert-True ($codexFlat -match 'Root and all descendants') 'Codex runtime policy does not cover descendants'
+Assert-True ($codexFlat -match 'names may appear only as disabled-policy literals or identifiers in a bootstrap, compact delegation boundary, or review evidence') 'Codex runtime policy does not define the narrow identifier-reference exception'
+Assert-True ($codexFlat -match 'That narrow reference is how Root propagates the prohibition') 'Codex runtime policy does not reconcile propagation with reference restrictions'
+Assert-True ($codexFlat -match 'must not read their content, invoke, route to, recommend, or delegate') 'Codex runtime policy omits prohibited actions'
+Assert-True ($codexFlat -match 'compact delegation boundary') 'Codex runtime policy is not propagated through compact delegation'
+Assert-True ($codexFlat -match 'must not recursively reload') 'Codex runtime policy permits descendant Skill reloads'
+Assert-True ($codexFlat -match 'does not create a capability gap, fallback, blocker, or governance upgrade') 'disabled workflow can become a false blocker'
+Assert-True ($codexFlat -match 'model-native brainstorming, planning, TDD, debugging, subagent coordination, review, and verification') 'Codex-native alternatives are incomplete'
+Assert-True ($codexFlat -match 'must not be inferred') 'unknown model identity can be treated as GPT-5.6'
+Assert-True ($openAiFlat -match 'confirmed Codex GPT-5\.6') 'OpenAI launch metadata omits the conditional runtime guard'
+Assert-True ($openAiFlat -match 'descendants') 'OpenAI launch metadata omits descendant propagation'
+foreach ($profile in $nonCodexProfiles) {
+    $profileContent = Get-Content -LiteralPath (Join-Path $skillRoot $profile) -Raw
+    Assert-True ($profileContent -notmatch 'GPT-5\.6|using-superpowers|Superpowers') "Codex-only policy leaked into $profile"
+}
+
+$trustSource = Get-Content -LiteralPath (Join-Path $repoRoot 'docs/agent/CLAIM_EVIDENCE_TRUST.md') -Raw
+$trustMirror = Get-Content -LiteralPath (Join-Path $skillRoot 'references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md') -Raw
+$realityAnchor = '<a id="sage-trust-product-reality-preflight"></a>'
+Assert-True (([regex]::Matches($trustSource, [regex]::Escape($realityAnchor))).Count -eq 1) 'Product Reality Preflight owner anchor is not unique in canonical source'
+Assert-True (([regex]::Matches($trustMirror, [regex]::Escape($realityAnchor))).Count -eq 1) 'Product Reality Preflight owner anchor is not unique in packaged mirror'
+Assert-True ((Get-CanonicalTextSha256 (Join-Path $repoRoot 'docs/agent/CLAIM_EVIDENCE_TRUST.md')) -ceq (Get-CanonicalTextSha256 (Join-Path $skillRoot 'references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md'))) 'Product Reality Preflight mirror differs from canonical source'
+$canonicalRealityPhrases = @(
+    'canonical product implementation and state owner',
+    'real product execution graph',
+    'evidence graph',
+    'real user or system entry',
+    'durable outcome owner',
+    'packaged or delivered artifact path'
+)
+foreach ($required in $canonicalRealityPhrases) {
+    Assert-True ($trustSource.Contains($required)) "Product Reality Preflight omits: $required"
+}
+Assert-True ($trustSource -match 'complex Standard or Heavy milestone') 'Product Reality Preflight trigger is too broad or absent'
+Assert-True ($trustSource -match 'Light work does not trigger') 'Product Reality Preflight does not exempt Light work'
+Assert-True ($trustSource -match 'does not require a new file, independent gate, Graph contract, default E2E') 'Product Reality Preflight can create mandatory governance artifacts'
+Assert-True ($trustSource -match 'additional PM approval, reviewer, or fixed per-milestone artifact') 'Product Reality Preflight can create extra approval or review work'
+Assert-True ($trustSource -match 'Ordinary missing detail does not block') 'Product Reality Preflight can block on ordinary omissions'
+Assert-True ($planningContent -match 'sage-trust-product-reality-preflight') 'planning profile does not route complex milestones to Product Reality Preflight'
+Assert-True ($skillContent -match 'sage-trust-product-reality-preflight') 'Skill does not route complex milestones to Product Reality Preflight'
+foreach ($nonOwner in @(
+    @{ Name = 'planning profile'; Content = $planningContent },
+    @{ Name = 'Skill'; Content = $skillContent }
+)) {
+    $flat = $nonOwner.Content -replace '\s+', ' '
+    $copiedCount = @($canonicalRealityPhrases | Where-Object { $flat.Contains($_) }).Count
+    Assert-True ($copiedCount -lt $canonicalRealityPhrases.Count) "$($nonOwner.Name) duplicates the complete canonical Product Reality Preflight body"
+}
 
 # Only manifest-owned canonical Markdown participates in package closure.
 # Project-owned links and SKILL.md links explicitly marked source-archive-only

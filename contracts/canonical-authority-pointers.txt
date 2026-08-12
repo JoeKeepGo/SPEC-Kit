@@ -5,6 +5,7 @@ docs/SAGE_CORE.md#sage-completion-001
 docs/agent/AGENT_HARNESS.md#sage-auth-010
 docs/agent/AGENT_HARNESS.md#sage-ctx-005
 docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-001
+docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-product-reality-preflight
 docs/agent/CAPABILITY_ADAPTERS.md#sage-adp-003
 docs/agent/CAPABILITY_ADAPTERS.md#sage-adp-007
 docs/agent/EXECUTION_ECONOMY.md#sage-loop-003
