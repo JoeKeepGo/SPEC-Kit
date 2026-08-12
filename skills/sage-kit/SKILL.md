@@ -67,6 +67,7 @@ read-only actor returns a bounded proposed update.
 |---|---|
 | Adoption | `references/adoption.md` |
 | Roadmap, milestone, wave, or phase planning | `references/planning.md` |
+| Complex Standard/Heavy milestone reality preflight | `framework-doc("docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-product-reality-preflight")` |
 | Implementation, debugging, or delegated work | relevant sections of `references/execution.md` |
 | Review, corrective, handoff, acceptance, closeout | `references/review-completion.md` |
 | Capability realization or claim-evidence trust | `references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md` |
@@ -76,6 +77,7 @@ read-only actor returns a bounded proposed update.
 Host references are loaded only for the active host: `references/codex.md`,
 `references/claude.md`, `references/opencode.md`, or
 `references/kimi-runtime.md`.
+Apply any active-host runtime policy before routing to optional Skills.
 
 `skill-manifest.json` is the package identity and required-resource inventory.
 Its resource digests use UTF-8 bytes with CRLF normalized to LF so identity is

@@ -16,6 +16,9 @@ interface:
     questions, or projects that have not adopted SAGE-Kit. Descendants inherit
     the same or narrower project boundary and selected profile identity without
     activation markers, nested Skill reloads, or duplicate review.
+    In a confirmed Codex GPT-5.6 runtime, apply the package-local Codex policy
+    before optional Skill routing and propagate its disabled-workflow boundary
+    to all descendants while continuing with Codex-native engineering methods.
     Apply the active SPEC, permission, evidence-owner, and human-gate boundaries.
 
 policy:

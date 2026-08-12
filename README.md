@@ -33,6 +33,12 @@ The loop does the work. The optional Graph makes dependencies, joins, gates,
 and parallelism explicit when that structure improves a decision. Light work
 does not need a Graph.
 
+Before substantial implementation in a complex milestone, keep one compact
+view of the real product path in the existing SPEC or plan: ownership,
+execution, evidence, entry, durable outcome, and packaged delivery. This catches
+architecture drift early without creating another required document, review,
+or default end-to-end gate.
+
 ## Quick Adoption
 
 Install the Skill once, bootstrap each project, and then work normally:

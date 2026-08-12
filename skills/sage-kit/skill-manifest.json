@@ -1,8 +1,8 @@
 {
   "format_version": 1,
   "package_id": "sage-kit",
-  "package_version": "2026.8.11.3",
-  "release_identity": "v2026.8.11.3",
+  "package_version": "2026.8.13.1",
+  "release_identity": "v2026.8.13.1",
   "locator": {
     "base": "SKILL.md",
     "digest_algorithm": "sha256-utf8-canonical-lf",
@@ -38,7 +38,7 @@
     {
       "logical_path": "docs/agent/CLAIM_EVIDENCE_TRUST.md",
       "package_path": "references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md",
-      "sha256": "1d9aab0dd8512af785d381ca0be0e19efd679d8834b64e8cb4b1137233109291"
+      "sha256": "1a5806bfa143f8fe280981c219578bd578962994809cd8471346a562d38c873b"
     },
     {
       "logical_path": "docs/agent/EXECUTION_ECONOMY.md",
@@ -58,13 +58,13 @@
     {
       "logical_path": "docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md",
       "package_path": "references/framework/docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md",
-      "sha256": "42693074cd36be387b22840df9fe08239d2b5fd18382bece67de7c4befc0422f"
+      "sha256": "090154513b18ac9f42a26e8e42e8278cdf8e7d7ea77234ab8ef36c558c029e32"
     }
   ],
   "package_files": [
     {
       "package_path": "agents/openai.yaml",
-      "sha256": "733fb15be447ee63d12590c9d1497250b25c2cf76fae558ea2834a3697c8136b"
+      "sha256": "8c1518aaa4691d798de7c4c6c63a6a3ecbbd3c0824c340a2bdfc1d9258cab801"
     },
     {
       "package_path": "references/adoption.md",
@@ -92,7 +92,7 @@
     },
     {
       "package_path": "references/codex.md",
-      "sha256": "a83d23bc062edbe346749094c95c455c6d42bbe65f13e7cac38ff0effe56af51"
+      "sha256": "f00397f14a7d6a221528db73705fb9e342a51d49e39202e346d98797756adbd6"
     },
     {
       "package_path": "references/execution.md",
@@ -116,7 +116,7 @@
     },
     {
       "package_path": "references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md",
-      "sha256": "1d9aab0dd8512af785d381ca0be0e19efd679d8834b64e8cb4b1137233109291"
+      "sha256": "1a5806bfa143f8fe280981c219578bd578962994809cd8471346a562d38c873b"
     },
     {
       "package_path": "references/framework/docs/agent/EXECUTION_ECONOMY.md",
@@ -136,7 +136,7 @@
     },
     {
       "package_path": "references/framework/docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md",
-      "sha256": "42693074cd36be387b22840df9fe08239d2b5fd18382bece67de7c4befc0422f"
+      "sha256": "090154513b18ac9f42a26e8e42e8278cdf8e7d7ea77234ab8ef36c558c029e32"
     },
     {
       "package_path": "references/kimi-runtime.md",
@@ -148,7 +148,7 @@
     },
     {
       "package_path": "references/planning.md",
-      "sha256": "d760a203a2220d75bb4c6014a96f467b1b2d08ecc54a7f6f322587bce0b9a2f9"
+      "sha256": "f1b42bed153fb37bce52b48614afce84cabf7aa974716f39c2f407be5e68adc9"
     },
     {
       "package_path": "references/review-completion.md",
@@ -156,7 +156,7 @@
     },
     {
       "package_path": "SKILL.md",
-      "sha256": "e2b8cc19518f9a0543b0111a05fc88da37de4e3eeef0a081ad38b3a9fd80fe5a"
+      "sha256": "95cb5e0ba758966520976f53b6bb18fb712cd65790c4f464b11675c8c4a2c611"
     }
   ]
 }

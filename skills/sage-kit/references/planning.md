@@ -37,3 +37,9 @@ Use [`CLAIM_EVIDENCE_TRUST.md`](framework/docs/agent/CLAIM_EVIDENCE_TRUST.md)
 for capability and evidence decisions instead of reproducing its model. Plans
 and planning descendants inherit the same or narrower SAGE boundary; they do
 not recursively reload the Skill or schedule duplicate review.
+
+Before substantial implementation in a complex Standard or Heavy milestone,
+apply the canonical
+`framework-doc("docs/agent/CLAIM_EVIDENCE_TRUST.md#sage-trust-product-reality-preflight")`
+section inside the existing active SPEC or plan. It is a planning check, not a
+new artifact or gate.

@@ -11,6 +11,10 @@ fail() {
   exit 1
 }
 
+flat_contains() {
+  sed 's/\r$//' "$1" | tr '\n' ' ' | grep -Fq "$2"
+}
+
 if command -v jq >/dev/null 2>&1; then
   json_value() { jq -er "$2 | strings" "$1"; }
 elif command -v plutil >/dev/null 2>&1; then
@@ -143,6 +147,78 @@ done < "$package_entries"
 bootstrap=$skill_root/references/framework/docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md
 sed 's/\r$//' "$bootstrap" | tr '\n' ' ' | grep -Eq 'package identity[[:space:]]+and selected[[:space:]]+resource digest' || fail 'bootstrap handoff omits package identity or selected resource digest'
 grep -Fq 'never the activation marker' "$bootstrap" || fail 'bootstrap handoff does not prohibit activation-marker propagation'
+check_bootstrap_authority() {
+  surface=$1
+  sed 's/\r$//' "$surface" | tr '\n' ' ' | grep -Eq 'explicit human risk classification constrains the agent' || fail 'bootstrap does not preserve explicit human risk authority'
+  grep -Fq 'does not grant permission' "$surface" || fail 'human risk classification can appear to grant permission'
+  sed 's/\r$//' "$surface" | tr '\n' ' ' | grep -Eq 'Permission remains target-[[:space:]]+and action-scoped' || fail 'bootstrap does not preserve target- and action-scoped authorization'
+  sed 's/\r$//' "$surface" | tr '\n' ' ' | grep -Eq 'must not replace the human risk decision with a[[:space:]]+stricter personal threshold' || fail 'bootstrap permits model risk preference to override human authority'
+  grep -Fq '## Other Skills' "$surface" || fail 'bootstrap does not provide an extension point for other Skills'
+  flat_contains "$surface" 'does not expand scope, permission, gates, or acceptance authority' || fail 'other Skills can appear to expand project authority'
+  flat_contains "$surface" 'specialist methods, tools, and checks within the existing controller and authority' || fail 'bootstrap prevents specialist Skills from participating under existing authority'
+  flat_contains "$surface" 'must not override an explicit human decision or introduce a second generic orchestration or review workflow for the same unchanged scope' || fail 'other Skill routing does not narrowly prevent duplicate generic workflows'
+  grep -Fq 'host/runtime policy' "$surface" || fail 'other Skill routing does not defer to host/runtime disable policy'
+  grep -Fq 'confirmed Codex GPT-5.6' "$surface" || fail 'bootstrap omits the conditional Codex GPT-5.6 guard'
+  grep -Fq 'references/codex.md' "$surface" || fail 'bootstrap does not point to the canonical Codex runtime policy'
+}
+check_bootstrap_authority "$bootstrap"
+check_bootstrap_authority "$repo_root/AGENTS.md"
+check_bootstrap_authority "$repo_root/docs/templates/AGENTS_SAGE_BOOTSTRAP_TEMPLATE.md"
+
+skill=$skill_root/SKILL.md
+codex=$skill_root/references/codex.md
+planning=$skill_root/references/planning.md
+openai=$skill_root/agents/openai.yaml
+grep -Fq '## GPT-5.6 Runtime Policy' "$codex" || fail 'Codex profile is missing the canonical GPT-5.6 runtime policy'
+flat_contains "$codex" 'Root and all descendants' || fail 'Codex runtime policy does not cover descendants'
+flat_contains "$codex" 'names may appear only as disabled-policy literals or identifiers in a bootstrap, compact delegation boundary, or review evidence' || fail 'Codex runtime policy does not define the narrow identifier-reference exception'
+flat_contains "$codex" 'That narrow reference is how Root propagates the prohibition' || fail 'Codex runtime policy does not reconcile propagation with reference restrictions'
+flat_contains "$codex" 'must not read their content, invoke, route to, recommend, or delegate' || fail 'Codex runtime policy omits prohibited actions'
+flat_contains "$codex" 'compact delegation boundary' || fail 'Codex runtime policy is not propagated through compact delegation'
+flat_contains "$codex" 'must not recursively reload' || fail 'Codex runtime policy permits descendant Skill reloads'
+flat_contains "$codex" 'does not create a capability gap, fallback, blocker, or governance upgrade' || fail 'disabled workflow can become a false blocker'
+flat_contains "$codex" 'model-native brainstorming, planning, TDD, debugging, subagent coordination, review, and verification' || fail 'Codex-native alternatives are incomplete'
+flat_contains "$codex" 'must not be inferred' || fail 'unknown model identity can be treated as GPT-5.6'
+flat_contains "$openai" 'confirmed Codex GPT-5.6' || fail 'OpenAI launch metadata omits the conditional runtime guard'
+flat_contains "$openai" 'descendants' || fail 'OpenAI launch metadata omits descendant propagation'
+for profile in "$skill_root/references/claude.md" "$skill_root/references/kimi-runtime.md" "$skill_root/references/opencode.md"; do
+  grep -Eq 'GPT-5\.6|using-superpowers|Superpowers' "$profile" && fail "Codex-only policy leaked into $profile"
+done
+
+trust_source=$repo_root/docs/agent/CLAIM_EVIDENCE_TRUST.md
+trust_mirror=$skill_root/references/framework/docs/agent/CLAIM_EVIDENCE_TRUST.md
+test "$(grep -Fc '<a id="sage-trust-product-reality-preflight"></a>' "$trust_source")" -eq 1 || fail 'Product Reality Preflight owner anchor is not unique in canonical source'
+test "$(grep -Fc '<a id="sage-trust-product-reality-preflight"></a>' "$trust_mirror")" -eq 1 || fail 'Product Reality Preflight owner anchor is not unique in packaged mirror'
+test "$(canonical_sha256 "$trust_source")" = "$(canonical_sha256 "$trust_mirror")" || fail 'Product Reality Preflight mirror differs from canonical source'
+for required in \
+  'canonical product implementation and state owner' \
+  'real product execution graph' \
+  'evidence graph' \
+  'real user or system entry' \
+  'durable outcome owner' \
+  'packaged or delivered artifact path'; do
+  grep -Fq "$required" "$trust_source" || fail "Product Reality Preflight omits: $required"
+done
+grep -Fq 'complex Standard or Heavy milestone' "$trust_source" || fail 'Product Reality Preflight trigger is too broad or absent'
+grep -Fq 'Light work does not trigger' "$trust_source" || fail 'Product Reality Preflight does not exempt Light work'
+grep -Fq 'does not require a new file, independent gate, Graph contract, default E2E' "$trust_source" || fail 'Product Reality Preflight can create mandatory governance artifacts'
+grep -Fq 'additional PM approval, reviewer, or fixed per-milestone artifact' "$trust_source" || fail 'Product Reality Preflight can create extra approval or review work'
+grep -Fq 'Ordinary missing detail does not block' "$trust_source" || fail 'Product Reality Preflight can block on ordinary omissions'
+grep -Fq 'sage-trust-product-reality-preflight' "$planning" || fail 'planning profile does not route complex milestones to Product Reality Preflight'
+grep -Fq 'sage-trust-product-reality-preflight' "$skill" || fail 'Skill does not route complex milestones to Product Reality Preflight'
+for non_owner in "$planning" "$skill"; do
+  copied=0
+  for phrase in \
+    'canonical product implementation and state owner' \
+    'real product execution graph' \
+    'evidence graph' \
+    'real user or system entry' \
+    'durable outcome owner' \
+    'packaged or delivered artifact path'; do
+    if flat_contains "$non_owner" "$phrase"; then copied=$((copied + 1)); fi
+  done
+  test "$copied" -lt 6 || fail "non-owner duplicates the complete canonical Product Reality Preflight body: $non_owner"
+done
 
 # Manifest-owned canonical Markdown is closed recursively. Project-owned and
 # explicitly source-archive-only links live outside this manifest set.

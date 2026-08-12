@@ -4,6 +4,25 @@ Use Codex native planning, editing, terminal, worktree, subagent, review, and
 GitHub capabilities inside project authority. SAGE-Kit does not require a
 command wrapper or framework runtime.
 
+## GPT-5.6 Runtime Policy
+
+Apply this policy only when host/model identity evidence confirms a Codex
+runtime using a GPT-5.6 family model. An unknown or unavailable model identity
+must not be inferred to be GPT-5.6.
+
+The `using-superpowers` and Superpowers names may appear only as disabled-policy
+literals or identifiers in a bootstrap, compact delegation boundary, or review
+evidence. That narrow reference is how Root propagates the prohibition. Root
+and all descendants must not read their content, invoke, route to, recommend,
+or delegate to either Skill or workflow. Descendants inherit the policy without
+receiving an activation marker and must not recursively reload the Skill to
+discover or confirm it.
+
+This runtime policy disables only those external workflows. It does not create
+a capability gap, fallback, blocker, or governance upgrade. Continue using
+Codex/model-native brainstorming, planning, TDD, debugging, subagent
+coordination, review, and verification within current project authority.
+
 Codex is expected to discover project `AGENTS.md` instructions from the project
 root toward the working directory when adoption preflight confirms the current
 host version and configuration do so. Use the root bootstrap for Light work,

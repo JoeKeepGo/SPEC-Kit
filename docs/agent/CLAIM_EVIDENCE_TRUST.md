@@ -55,6 +55,30 @@ This rule is technology-neutral. For example:
 - a security check in isolation does not prove enforcement at every claimed
   boundary or resistance to an alternate path.
 
+<a id="sage-trust-product-reality-preflight"></a>
+## Product Reality Preflight
+
+Before substantial implementation in a complex Standard or Heavy milestone,
+establish one compact view inside the existing active SPEC or plan. Confirm:
+
+1. the canonical product implementation and state owner;
+2. the real product execution graph;
+3. the evidence graph supporting the milestone's claims;
+4. the real user or system entry;
+5. the durable outcome owner, or an explicit stateless/N/A decision; and
+6. the packaged or delivered artifact path, or an explicit N/A decision.
+
+This is a conceptual product-path check. It does not activate the optional
+Graph contract. Correct the plan before broad implementation when it would
+bypass a canonical owner, depart from the accepted execution architecture,
+leave the evidence graph unable to reach a claimed real entry, durable outcome,
+or delivered artifact, or otherwise create false-green acceptance evidence.
+If correction changes authority or scope, hand it to the applicable owner; when
+the correction remains within existing authority, make it directly and
+continue.
+
+Light work does not trigger this preflight. It does not require a new file, independent gate, Graph contract, default E2E, additional PM approval, reviewer, or fixed per-milestone artifact. Ordinary missing detail does not block: clarify it when inexpensive, make a bounded project-authorized inference, or record a concern without expanding the milestone.
+
 ## Claim-Evidence Trust Model
 
 Every material claim is evaluated along four independent dimensions. Record
